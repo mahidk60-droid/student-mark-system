@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>দলইনগর উচ্চ বিদ্যালয় - সমন্বিত নম্বর, ট্যাবুলিশন ও অ্যাডমিট কার্ড</title>
+  <title>দলইনগর উচ্চ বিদ্যালয় - সমন্বিত নম্বর, ট্যাবুলিশন ও এডমিট কার্ড</title>
   <!-- Excel Reader (SheetJS) Library -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
@@ -46,11 +46,9 @@
       font-weight: bold;
       cursor: pointer;
       border-radius: 4px;
-      transition: all 0.3s ease;
     }
 
-    .tab-btn:hover { background: #5a7a8a; }
-    .tab-btn.active { background: #e67e22; box-shadow: 0 0 8px rgba(230, 126, 34, 0.5); }
+    .tab-btn.active { background: #e67e22; }
 
     .controls-grid {
       display: grid;
@@ -64,8 +62,6 @@
       border-radius: 4px;
       border: 1px solid #ccc;
       font-size: 12px;
-      background: white;
-      color: #000;
     }
 
     .student-entry-panel, .storage-panel {
@@ -84,14 +80,10 @@
       cursor: pointer;
       font-weight: bold;
       font-size: 12px;
-      transition: all 0.2s ease;
     }
 
-    .btn:hover { background: #229954; }
     .btn-edit { background: #f39c12; }
-    .btn-edit:hover { background: #e67e22; }
     .btn-danger { background: #e74c3c; }
-    .btn-danger:hover { background: #c0392b; }
 
     .btn-print {
       background: #2980b9;
@@ -104,10 +96,7 @@
       cursor: pointer;
       font-weight: bold;
       margin-top: 10px;
-      transition: all 0.2s ease;
     }
-
-    .btn-print:hover { background: #2471a3; }
 
     /* Class Storage Area */
     .class-storage-grid {
@@ -145,7 +134,7 @@
     .paper {
       background: #fff;
       margin: 0 auto;
-      padding: 5mm 8mm;
+      padding: 4mm 6mm;
       box-sizing: border-box;
       box-shadow: 0 0 10px rgba(0,0,0,0.15);
       position: relative;
@@ -163,27 +152,25 @@
 
     .school-title {
       text-align: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       margin: 0;
-      line-height: 1;
+      line-height: 1.1;
     }
 
     .exam-title {
       text-align: center;
       font-size: 12px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       font-weight: 600;
     }
 
     .meta-info {
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
+      font-size: 10.5px;
       margin-bottom: 4px;
       font-weight: 600;
-      flex-wrap: wrap;
-      gap: 5px;
     }
 
     .tabulation-header {
@@ -194,9 +181,21 @@
     .dotted-line {
       border-bottom: 1px dotted #000;
       display: inline-block;
-      min-width: 40px;
+      min-width: 35px;
       padding: 0 2px;
       text-align: center;
+    }
+
+    /* Double Column Container for 60 Students */
+    .double-column-wrapper {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .column-half {
+      flex: 1;
+      width: 50%;
     }
 
     /* Tables Configuration */
@@ -212,25 +211,25 @@
       box-sizing: border-box;
     }
 
-    .paper.portrait .tabulation-table { font-size: 10px; }
-    .paper.portrait .tabulation-table th { padding: 2px 1px; background-color: #f9f9f9; font-weight: bold; }
-    .paper.portrait .tabulation-table td { height: 18.5px; padding: 0 2px; }
+    .paper.portrait .tabulation-table { font-size: 8.5px; }
+    .paper.portrait .tabulation-table th { padding: 1px; background-color: #f9f9f9; font-weight: bold; }
+    .paper.portrait .tabulation-table td { height: 15.5px; padding: 0 1px; }
 
     .paper.landscape .tabulation-table { font-size: 9px; }
     .paper.landscape .tabulation-table th { font-size: 8px; padding: 2px 1px; background-color: #f9f9f9; font-weight: bold; }
     .paper.landscape .tabulation-table td { height: 18px; padding: 0 1px; }
 
-    .name-col { text-align: left !important; padding-left: 4px !important; }
-    .action-btn-cell { display: flex; gap: 2px; justify-content: center; }
+    .name-col { text-align: left !important; padding-left: 2px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .action-btn-cell { display: flex; gap: 1px; justify-content: center; }
 
-    .footer-stats { margin-top: 4px; font-size: 10px; font-weight: 600; }
+    .footer-stats { margin-top: 4px; font-size: 9.5px; font-weight: 600; }
     .footer-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
     .signature-section {
       display: flex;
       justify-content: space-between;
-      margin-top: 12px;
-      font-size: 10.5px;
+      margin-top: 10px;
+      font-size: 10px;
       font-weight: bold;
     }
 
@@ -241,7 +240,7 @@
       text-align: center;
     }
 
-    /* Admit Card Page & Grid Layout (Strictly 4 Cards per Page) */
+    /* Admit Card Page & Grid Layout (4 Cards per Page) */
     .admit-page {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -286,10 +285,7 @@
     .admit-header-text h3 { margin: 0; font-size: 14px; color: #000; }
     .admit-header-text p { margin: 2px 0 0 0; font-size: 10px; font-weight: bold; }
 
-    .admit-badge-container {
-      text-align: center;
-      margin: 6px 0;
-    }
+    .admit-badge-container { text-align: center; margin: 6px 0; }
 
     .admit-badge {
       display: inline-block;
@@ -301,11 +297,7 @@
       font-weight: bold;
     }
 
-    .admit-details {
-      margin-top: 5px;
-      line-height: 1.6;
-    }
-
+    .admit-details { margin-top: 5px; line-height: 1.6; }
     .admit-details table { width: 100%; border: none; border-collapse: collapse; }
     .admit-details td { text-align: left; border: none; height: auto; padding: 3px 0; font-size: 11px; }
 
@@ -327,35 +319,12 @@
     .template-view { display: none; }
     .template-view.active { display: block; }
 
-    /* Alert Box */
-    .alert-box {
-      display: none;
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #27ae60;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 4px;
-      z-index: 9999;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      animation: slideIn 0.3s ease;
-    }
-
-    .alert-box.show { display: block; }
-    .alert-box.error { background: #e74c3c; }
-
-    @keyframes slideIn {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
     /* Strict Print Styles */
     @media print {
       body { background: none; padding: 0; }
       .controls { display: none !important; }
       .action-col { display: none !important; }
-      .paper { box-shadow: none; margin: 0; padding: 4mm; width: 100% !important; }
+      .paper { box-shadow: none; margin: 0; padding: 2mm 4mm; width: 100% !important; }
       .admit-page {
         height: 280mm !important;
         margin: 0 !important;
@@ -367,17 +336,14 @@
 </head>
 <body>
 
-  <!-- Alert Notification -->
-  <div class="alert-box" id="alertBox"></div>
-
   <!-- কন্ট্রোল প্যানেল -->
   <div class="controls">
     <div class="tab-buttons">
-      <button class="tab-btn active" onclick="switchTemplate('general')">সাধারণ নম্বর ফর্দ</button>
-      <button class="tab-btn" onclick="switchTemplate('bangla-english')">বাংলা ও ইংরেজি</button>
-      <button class="tab-btn" onclick="switchTemplate('tabulation-68')">৬-৮ম ট্যাবুলিশন</button>
-      <button class="tab-btn" onclick="switchTemplate('tabulation-910')">৯-১০ম ট্যাবুলিশন</button>
-      <button class="tab-btn" style="background: #8e44ad;" onclick="switchTemplate('admit-card')">🎟️ এডমিট কার্ড</button>
+      <button class="tab-btn active" onclick="switchTemplate('general')">সাধারণ নম্বর ফর্দ (৬০ জন)</button>
+      <button class="tab-btn" onclick="switchTemplate('bangla-english')">বাংলা ও ইংরেজি নম্বর ফর্দ (৬০ জন)</button>
+      <button class="tab-btn" onclick="switchTemplate('tabulation-68')">৬ষ্ঠ-৮ম ট্যাবুলিশন</button>
+      <button class="tab-btn" onclick="switchTemplate('tabulation-910')">৯ম-১০ম ট্যাবুলিশন</button>
+      <button class="tab-btn" style="background: #8e44ad;" onclick="switchTemplate('admit-card')">🎟️ এডমিট কার্ড (১ পেজে ৪টি)</button>
     </div>
 
     <div class="controls-grid">
@@ -401,15 +367,15 @@
         <option value="খ">শাখা: খ</option>
       </select>
 
-      <input type="text" id="inSubject" value="পদার্থ বিজ্ঞান" placeholder="বিষয়">
-      <input type="text" id="inMarks" value="১০০" placeholder="পূর্ণমান">
-      <input type="text" id="inExam" value="বার্ষিক পরীক্ষা - ২০২৬" placeholder="পরীক্ষার নাম">
+      <input type="text" id="inSubject" value="পদার্থ বিজ্ঞান" placeholder="বিষয়" oninput="updateHeader()">
+      <input type="text" id="inMarks" value="১০০" placeholder="পূর্ণমান" oninput="updateHeader()">
+      <input type="text" id="inExam" value="বার্ষিক পরীক্ষা - ২০২৬ ইং" placeholder="পরীক্ষার নাম" oninput="updateHeader()">
     </div>
 
     <!-- তথ্য এন্ট্রি ও এডিট প্যানেল -->
     <div class="student-entry-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div style="flex: 1;">
+        <div>
           <label style="font-size: 12px; font-weight: bold;">📁 Excel / CSV ফাইল লোড করুন:</label>
           <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" onchange="loadExcelData(event)" style="background: white; color: black; font-size: 11px;">
         </div>
@@ -419,17 +385,17 @@
       <hr style="border: 0.5px solid #555; margin: 8px 0;">
 
       <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;" id="formTitle">✍️ ম্যানুয়ালি নতুন তথ্য যুক্ত করুন:</div>
-      <div class="controls-grid" style="grid-template-columns: auto 1fr 120px 60px 60px 60px 80px;">
-        <input type="text" id="stuRoll" placeholder="রোল" style="max-width: 80px;">
+      <div class="controls-grid" style="grid-template-columns: 80px 1fr 90px 50px 50px 50px auto;">
+        <input type="text" id="stuRoll" placeholder="রোল (যেমন: ১)">
         <input type="text" id="stuName" placeholder="শিক্ষার্থীর নাম">
         <select id="stuGroup">
           <option value="বিজ্ঞান">বিজ্ঞান</option>
           <option value="মানবিক">মানবিক</option>
           <option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option>
         </select>
-        <input type="text" id="stuCq" placeholder="রচনা" style="max-width: 60px;">
-        <input type="text" id="stuMcq" placeholder="নৈর্ব্যক্তিক" style="max-width: 60px;">
-        <input type="text" id="stuPrac" placeholder="ব্যব/GPA" style="max-width: 60px;">
+        <input type="text" id="stuCq" placeholder="রচনা">
+        <input type="text" id="stuMcq" placeholder="নৈর্ব্যক্তিক">
+        <input type="text" id="stuPrac" placeholder="ব্যব/GPA">
         <button class="btn" id="btnSaveStudent" onclick="addOrUpdateStudent()">সেভ করুন</button>
       </div>
     </div>
@@ -440,7 +406,7 @@
       <div class="class-storage-grid" id="storageContainer"></div>
     </div>
 
-    <button class="btn-print" onclick="printPage()">🖨️ A4 পেজে প্রিন্ট / PDF সেভ করুন</button>
+    <button class="btn-print" onclick="printPage()">A4 পেজে প্রিন্ট / PDF সেভ করুন</button>
   </div>
 
   <!-- প্রিন্টযোগ্য মূল A4 কাগজ -->
@@ -448,7 +414,7 @@
     <div id="standardHeader">
       <div class="school-title">দলইনগর উচ্চ বিদ্যালয়</div>
       <div class="exam-title">
-        <span id="outExam">বার্ষিক পরীক্ষা - ২০২৬</span>
+        <span id="outExam">বার্ষিক পরীক্ষা - ২০২৬ ইং</span>
       </div>
 
       <!-- নম্বর ফর্দ মেটা ইনফো -->
@@ -457,9 +423,10 @@
           শ্রেণি- <span id="outClass" class="dotted-line">৯ম</span> 
           <span id="outGroupWrapper">গ্রুপ- <span id="outGroup" class="dotted-line">বিজ্ঞান</span></span>
           শাখা- <span id="outSection" class="dotted-line">ক</span> 
+          বিষয়:- <span id="outSubject" class="dotted-line">পদার্থ বিজ্ঞান</span>
         </div>
-        <div>বিষয়:- <span id="outSubject" class="dotted-line">পদার্থ বিজ্ঞান</span></div>
         <div>পূর্ণমান :- <span id="outMarks" class="dotted-line">১০০</span></div>
+        <div>তারিখ:- <span class="dotted-line" style="min-width: 40px;"></span></div>
       </div>
 
       <!-- ট্যাবুলিশন শিট মেটা ইনফো -->
@@ -469,49 +436,96 @@
       </div>
     </div>
 
-    <!-- ১. সাধারণ নম্বর ফর্দ -->
+    <!-- ১. সাধারণ নম্বর ফর্দ (২ কলামে ৬০ জন) -->
     <div id="generalView" class="template-view active">
-      <table class="tabulation-table">
-        <thead>
-          <tr>
-            <th style="width: 8%;">রোল</th>
-            <th style="width: 38%;">শিক্ষার্থীর নাম</th>
-            <th style="width: 10%;">নৈর্ব্যক্তিক</th>
-            <th style="width: 10%;">রচনামূলক</th>
-            <th style="width: 10%;">ব্যবহারিক</th>
-            <th style="width: 8%;">মোট</th>
-            <th style="width: 8%;">জি.পি.এ</th>
-            <th class="action-col" style="width: 8%;">একশন</th>
-          </tr>
-        </thead>
-        <tbody id="generalTableBody"></tbody>
-      </table>
+      <div class="double-column-wrapper">
+        <!-- কলাম ১ (১-৩০) -->
+        <div class="column-half">
+          <table class="tabulation-table">
+            <thead>
+              <tr>
+                <th style="width: 10%;">রোল</th>
+                <th style="width: 36%;">শিক্ষার্থীর নাম</th>
+                <th style="width: 11%;">নৈব.</th>
+                <th style="width: 11%;">রচ.</th>
+                <th style="width: 10%;">ব্যব.</th>
+                <th style="width: 11%;">মোট</th>
+                <th style="width: 11%;">GPA</th>
+                <th class="action-col" style="width: 5%;">এ.</th>
+              </tr>
+            </thead>
+            <tbody id="generalTableBody1"></tbody>
+          </table>
+        </div>
+        <!-- কলাম ২ (৩১-৬০) -->
+        <div class="column-half">
+          <table class="tabulation-table">
+            <thead>
+              <tr>
+                <th style="width: 10%;">রোল</th>
+                <th style="width: 36%;">শিক্ষার্থীর নাম</th>
+                <th style="width: 11%;">নৈব.</th>
+                <th style="width: 11%;">রচ.</th>
+                <th style="width: 10%;">ব্যব.</th>
+                <th style="width: 11%;">মোট</th>
+                <th style="width: 11%;">GPA</th>
+                <th class="action-col" style="width: 5%;">এ.</th>
+              </tr>
+            </thead>
+            <tbody id="generalTableBody2"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <!-- ২. বাংলা ও ইংরেজি নম্বর ফর্দ -->
+    <!-- ২. বাংলা ও ইংরেজি নম্বর ফর্দ (২ কলামে ৬০ জন) -->
     <div id="banglaEnglishView" class="template-view">
-      <table class="tabulation-table">
-        <thead>
-          <tr>
-            <th rowspan="2" style="width: 8%;">রোল</th>
-            <th rowspan="2" style="width: 30%;">শিক্ষার্থীর নাম</th>
-            <th colspan="2" style="width: 18%;">বাংলা ১ম</th>
-            <th colspan="2" style="width: 18%;">বাংলা ২য়</th>
-            <th colspan="2" style="width: 10%;">মোট</th>
-            <th rowspan="2" style="width: 8%;">সর্বমোট</th>
-            <th class="action-col" rowspan="2" style="width: 8%;">একশন</th>
-          </tr>
-          <tr>
-            <th style="width: 9%;">রচনা</th>
-            <th style="width: 9%;">নৈ.ব্যা.</th>
-            <th style="width: 9%;">রচনা</th>
-            <th style="width: 9%;">নৈ.ব্যা.</th>
-            <th style="width: 5%;">রচনা</th>
-            <th style="width: 5%;">নৈ.ব্যা.</th>
-          </tr>
-        </thead>
-        <tbody id="beTableBody"></tbody>
-      </table>
+      <div class="double-column-wrapper">
+        <!-- কলাম ১ (১-৩০) -->
+        <div class="column-half">
+          <table class="tabulation-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 10%;">রোল</th>
+                <th rowspan="2" style="width: 32%;">শিক্ষার্থীর নাম</th>
+                <th colspan="2">১ম পত্র</th>
+                <th colspan="2">২য় পত্র</th>
+                <th rowspan="2" style="width: 12%;">মোট</th>
+                <th class="action-col" rowspan="2" style="width: 6%;">এ.</th>
+              </tr>
+              <tr>
+                <th style="width: 10%;">রচ</th>
+                <th style="width: 10%;">নৈ</th>
+                <th style="width: 10%;">রচ</th>
+                <th style="width: 10%;">নৈ</th>
+              </tr>
+            </thead>
+            <tbody id="beTableBody1"></tbody>
+          </table>
+        </div>
+        <!-- কলাম ২ (৩১-৬০) -->
+        <div class="column-half">
+          <table class="tabulation-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="width: 10%;">রোল</th>
+                <th rowspan="2" style="width: 32%;">শিক্ষার্থীর নাম</th>
+                <th colspan="2">১ম পত্র</th>
+                <th colspan="2">২য় পত্র</th>
+                <th rowspan="2" style="width: 12%;">মোট</th>
+                <th class="action-col" rowspan="2" style="width: 6%;">এ.</th>
+              </tr>
+              <tr>
+                <th style="width: 10%;">রচ</th>
+                <th style="width: 10%;">নৈ</th>
+                <th style="width: 10%;">রচ</th>
+                <th style="width: 10%;">নৈ</th>
+              </tr>
+            </thead>
+            <tbody id="beTableBody2"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- ৩. ৬ষ্ঠ-৮ম শ্রেণি ট্যাবুলিশন শিট -->
@@ -520,7 +534,7 @@
         <thead>
           <tr>
             <th style="width: 4%;">রোল</th>
-            <th style="width: 16%;">শিক্ষার্থীর নাম</th>
+            <th style="width: 18%;">শিক্ষার্থীর নাম</th>
             <th style="width: 5%;">বাংলা ১ম</th>
             <th style="width: 5%;">বাংলা ২য়</th>
             <th style="width: 5%;">মোট</th>
@@ -529,9 +543,9 @@
             <th style="width: 5%;">মোট</th>
             <th style="width: 6%;">গণিত</th>
             <th style="width: 6%;">বিজ্ঞান</th>
-            <th style="width: 6%;">বিজিএস</th>
+            <th style="width: 8%;">বিজিএস</th>
             <th style="width: 6%;">ধর্ম</th>
-            <th style="width: 6%;">আইসিটি</th>
+            <th style="width: 8%;">আইসিটি</th>
             <th style="width: 6%;">সর্বমোট</th>
             <th style="width: 8%;">মন্তব্য</th>
           </tr>
@@ -546,23 +560,23 @@
         <thead>
           <tr>
             <th style="width: 3.5%;">রোল</th>
-            <th style="width: 13%;">শিক্ষার্থীর নাম</th>
-            <th style="width: 3.5%;">বাংলা ১</th>
-            <th style="width: 3.5%;">বাংলা ২</th>
-            <th style="width: 3.5%;">মোট</th>
-            <th style="width: 3.5%;">ইংরেজি ১</th>
-            <th style="width: 3.5%;">ইংরেজি ২</th>
-            <th style="width: 3.5%;">মোট</th>
-            <th style="width: 4%;">গণিত</th>
-            <th style="width: 4%;">বিজ্ঞান</th>
-            <th style="width: 6%;">গ্রুপ-১</th>
-            <th style="width: 6%;">গ্রুপ-২</th>
-            <th style="width: 6%;">গ্রুপ-৩</th>
-            <th style="width: 6%;">সাধারণ</th>
-            <th style="width: 6%;">ঐচ্ছিক</th>
-            <th style="width: 4%;">আইসিটি</th>
-            <th style="width: 4%;">সর্বমোট</th>
-            <th style="width: 5%;">মন্তব্য</th>
+            <th style="width: 15%;">শিক্ষার্থীর নাম</th>
+            <th style="width: 4.5%;">বাংলা ১ম</th>
+            <th style="width: 4.5%;">বাংলা ২য়</th>
+            <th style="width: 4.5%;">মোট</th>
+            <th style="width: 4.5%;">ইংরেজি ১ম</th>
+            <th style="width: 4.5%;">ইংরেজি ২য়</th>
+            <th style="width: 4.5%;">মোট</th>
+            <th style="width: 5%;">গণিত</th>
+            <th style="width: 5%;">বিজ্ঞান</th>
+            <th style="width: 7.5%;">গ্রুপ বিষয় ১</th>
+            <th style="width: 7.5%;">গ্রুপ বিষয় ২</th>
+            <th style="width: 7.5%;">গ্রুপ বিষয় ৩</th>
+            <th style="width: 7.5%;">সাধারণ বিষয়</th>
+            <th style="width: 6.5%;">ঐচ্ছিক</th>
+            <th style="width: 5.5%;">আইসিটি</th>
+            <th style="width: 5%;">সর্বমোট</th>
+            <th style="width: 5.5%;">মন্তব্য</th>
           </tr>
         </thead>
         <tbody id="tab910TableBody"></tbody>
@@ -571,9 +585,7 @@
 
     <!-- ৫. এডমিট কার্ড জেনারেটর ভিউ -->
     <div id="admitCardView" class="template-view">
-      <div id="admitPagesContainer">
-        <!-- JS দিয়ে প্রতি পেজে ৪টি করে এডমিট কার্ড তৈরি হবে -->
-      </div>
+      <div id="admitPagesContainer"></div>
     </div>
 
     <!-- ফুটার ও স্বাক্ষর সেকশন -->
@@ -587,7 +599,7 @@
       </div>
 
       <div class="signature-section">
-        <div class="signature-box">বিষয় শিক্ষকের স্বাক্ষর</div>
+        <div class="signature-box" id="sig1">বিষয় শিক্ষকের স্বাক্ষর</div>
         <div class="signature-box">শ্রেণি শিক্ষকের স্বাক্ষর</div>
         <div class="signature-box">প্রধান শিক্ষকের স্বাক্ষর</div>
       </div>
@@ -595,20 +607,12 @@
   </div>
 
 <script>
+  const schoolLogoBase64 = "https://i.ibb.co/vzsnm3f/dalainagar-logo.png";
+
   let currentMode = 'general';
   let studentData = {};
   let editingRoll = null;
 
-  // Alert Notification Function
-  function showAlert(msg, isError = false) {
-    const box = document.getElementById('alertBox');
-    box.textContent = msg;
-    box.classList.add('show');
-    box.classList.toggle('error', isError);
-    setTimeout(() => box.classList.remove('show'), 3000);
-  }
-
-  // বাংলা সংখ্যাকে ইংরেজিতে রূপান্তর করার ফাংশন
   function banglaToEnglishNum(str) {
     if(!str) return '';
     const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -627,7 +631,7 @@
 
     if (selectedClass === '৯ম' || selectedClass === '১০ম') {
       groupSelect.style.display = 'inline-block';
-      groupWrapper.style.display = 'inline';
+      groupWrapper.style.display = 'inline-block';
     } else {
       groupSelect.style.display = 'none';
       groupWrapper.style.display = 'none';
@@ -647,25 +651,23 @@
       }
     });
 
-    // রোল সর্টিং
     filteredList.sort((a, b) => {
       let numA = parseInt(banglaToEnglishNum(a.rollDisplay)) || 0;
       let numB = parseInt(banglaToEnglishNum(b.rollDisplay)) || 0;
       return numA - numB;
     });
 
-    // 1. General Table
-    const genBody = document.getElementById('generalTableBody');
-    genBody.innerHTML = '';
-    for (let i = 0; i < 30; i++) {
+    // --- 1. General Table (Two Columns: 30 + 30 = 60 Students) ---
+    const genBody1 = document.getElementById('generalTableBody1');
+    const genBody2 = document.getElementById('generalTableBody2');
+    genBody1.innerHTML = '';
+    genBody2.innerHTML = '';
+
+    for (let i = 0; i < 60; i++) {
       const student = filteredList[i] || {};
       const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
-
       const actionBtn = student.rollKey ? 
-        `<div class="action-btn-cell">
-          <button class="btn btn-edit" style="padding: 1px 4px; font-size: 9px;" onclick="editStudent('${student.rollKey}')">এডিট</button>
-          <button class="btn btn-danger" style="padding: 1px 4px; font-size: 9px;" onclick="deleteStudent('${student.rollKey}')">ডেলিট</button>
-        </div>` : '';
+        `<div class="action-btn-cell"><button class="btn btn-edit" style="padding: 0 2px; font-size: 8px;" onclick="editStudent('${student.rollKey}')">✏️</button></div>` : '';
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -678,20 +680,22 @@
         <td>${student.gpa || ''}</td>
         <td class="action-col">${actionBtn}</td>
       `;
-      genBody.appendChild(tr);
+
+      if (i < 30) genBody1.appendChild(tr);
+      else genBody2.appendChild(tr);
     }
 
-    // 2. Bangla/English Table
-    const beBody = document.getElementById('beTableBody');
-    beBody.innerHTML = '';
-    for (let i = 0; i < 30; i++) {
-      const student = filteredList[i] || {};
-      const rollText = student.rollDisplay || (i + 1 < 10 ? '०' + (i + 1) : (i + 1));
+    // --- 2. Bangla/English Table (Two Columns: 30 + 30 = 60 Students) ---
+    const beBody1 = document.getElementById('beTableBody1');
+    const beBody2 = document.getElementById('beTableBody2');
+    beBody1.innerHTML = '';
+    beBody2.innerHTML = '';
 
+    for (let i = 0; i < 60; i++) {
+      const student = filteredList[i] || {};
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
       const actionBtn = student.rollKey ? 
-        `<div class="action-btn-cell">
-          <button class="btn btn-edit" style="padding: 1px 4px; font-size: 9px;" onclick="editStudent('${student.rollKey}')">এডিট</button>
-        </div>` : '';
+        `<div class="action-btn-cell"><button class="btn btn-edit" style="padding: 0 2px; font-size: 8px;" onclick="editStudent('${student.rollKey}')">✏️</button></div>` : '';
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -701,18 +705,18 @@
         <td>${student.b1mcq || ''}</td>
         <td>${student.b2cq || ''}</td>
         <td>${student.b2mcq || ''}</td>
-        <td>${student.totCq || ''}</td>
-        <td>${student.totMcq || ''}</td>
         <td>${student.grandTotal || ''}</td>
         <td class="action-col">${actionBtn}</td>
       `;
-      beBody.appendChild(tr);
+
+      if (i < 30) beBody1.appendChild(tr);
+      else beBody2.appendChild(tr);
     }
 
     // 3. Tabulation Sheet (Class 6-8)
     const tab68Body = document.getElementById('tab68TableBody');
     tab68Body.innerHTML = '';
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
       const student = filteredList[i] || {};
       const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
 
@@ -740,9 +744,9 @@
     // 4. Tabulation Sheet (Class 9-10)
     const tab910Body = document.getElementById('tab910TableBody');
     tab910Body.innerHTML = '';
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
       const student = filteredList[i] || {};
-      const rollText = student.rollDisplay || (i + 1 < 10 ? '०' + (i + 1) : (i + 1));
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -771,7 +775,6 @@
     renderAdmitCards(filteredList);
   }
 
-  // এডমিট কার্ড জেনারেটর
   function renderAdmitCards(students) {
     const container = document.getElementById('admitPagesContainer');
     container.innerHTML = '';
@@ -781,12 +784,9 @@
     const secName = document.getElementById('inSection').value;
 
     if (students.length === 0) {
-      container.innerHTML = `<div style="text-align: center; padding: 30px; color: #777; font-size: 14px;">📋 শিক্ষার্থীর তথ্য যুক্ত করলে এডমিট কার্ড তৈরি হবে</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 30px; color: #777;">কোনো শিক্ষার্থীর নাম নেই। এন্ট্রি করুন বা লোড করুন।</div>`;
       return;
     }
-
-    // SVG Logo as Data URL
-    const logoSVG = `data:image/svg+xml,%3Csvg width='50' height='50' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%231a252f' width='50' height='50' rx='5'/%3E%3Ctext x='25' y='28' text-anchor='middle' font-size='24' font-weight='bold' fill='%23fff' font-family='Arial'%3E📚%3C/text%3E%3C/svg%3E`;
 
     for (let i = 0; i < students.length; i += 4) {
       const pageChunk = students.slice(i, i + 4);
@@ -796,36 +796,34 @@
       pageChunk.forEach(s => {
         const card = document.createElement('div');
         card.className = 'admit-card';
-        const idNum = 202600 + (parseInt(banglaToEnglishNum(s.rollDisplay)) || 0);
-        
         card.innerHTML = `
           <div>
             <div class="admit-card-header">
-              <img src="${logoSVG}" class="admit-logo" alt="Logo">
+              <img src="${schoolLogoBase64}" class="admit-logo" alt="Logo" onerror="this.src='https://via.placeholder.com/50?text=Logo'">
               <div class="admit-header-text">
                 <h3>দলইনগর উচ্চ বিদ্যালয়</h3>
                 <p>রাউজান, চট্টগ্রাম</p>
-                <p style="font-size: 9px;">${examName}</p>
+                <p>${examName}</p>
               </div>
             </div>
 
             <div class="admit-badge-container">
-              <span class="admit-badge">🎟️ প্রবেশ পত্র</span>
+              <span class="admit-badge">প্রবেশ পত্র (ADMIT CARD)</span>
             </div>
 
             <div class="admit-details">
               <table>
-                <tr><td><b>নাম:</b></td><td><b>${s.name || '.....................'}</b></td></tr>
+                <tr><td style="width: 35%;"><b>শিক্ষার্থীর নাম:</b></td><td><b>${s.name || '------------------'}</b></td></tr>
                 <tr><td><b>শ্রেণি:</b> ${clsName}</td><td><b>শাখা:</b> ${secName}</td></tr>
-                <tr><td><b>রোল:</b> ${s.rollDisplay}</td><td><b>গ্রুপ:</b> ${s.group || 'সাধারণ'}</td></tr>
-                <tr><td colspan="2"><b>পরীক্ষা কোড:</b> ${idNum}</td></tr>
+                <tr><td><b>রোল নং:</b> ${s.rollDisplay}</td><td><b>গ্রুপ:</b> ${s.group || 'সাধারণ'}</td></tr>
+                <tr><td><b>আইডি নং:</b></td><td>${202600 + (parseInt(banglaToEnglishNum(s.rollDisplay)) || 0)}</td></tr>
               </table>
             </div>
           </div>
 
           <div class="admit-footer">
-            <div class="admit-sig-box">শ্রেণি শিক্ষক</div>
-            <div class="admit-sig-box">প্রধান শিক্ষক</div>
+            <div class="admit-sig-box">শ্রেণি শিক্ষকের স্বাক্ষর</div>
+            <div class="admit-sig-box">প্রধান শিক্ষকের স্বাক্ষর</div>
           </div>
         `;
         pageDiv.appendChild(card);
@@ -835,7 +833,6 @@
     }
   }
 
-  // নতুন এন্ট্রি বা এডিট সেভ করা
   function addOrUpdateStudent() {
     const rawRoll = document.getElementById('stuRoll').value.trim();
     const name = document.getElementById('stuName').value.trim();
@@ -845,14 +842,11 @@
     const prac = document.getElementById('stuPrac').value;
 
     if (!rawRoll || !name) {
-      showAlert('❌ রোল এবং নাম প্রদান করুন', true);
+      alert("দয়া করে রোল এবং শিক্ষার্থীর নাম প্রদান করুন");
       return;
     }
 
     const key = editingRoll || rawRoll;
-    const cqNum = parseFloat(banglaToEnglishNum(cq)) || 0;
-    const mcqNum = parseFloat(banglaToEnglishNum(mcq)) || 0;
-    const pracNum = parseFloat(banglaToEnglishNum(prac)) || 0;
 
     studentData[key] = {
       ...(studentData[key] || {}),
@@ -862,13 +856,12 @@
       cq: cq,
       mcq: mcq,
       prac: prac,
-      total: (cqNum + mcqNum + pracNum) || '',
-      gpa: ''
+      total: (parseFloat(banglaToEnglishNum(cq))||0) + (parseFloat(banglaToEnglishNum(mcq))||0) + (parseFloat(banglaToEnglishNum(prac))||0) || ''
     };
 
     renderTables();
     resetForm();
-    showAlert(editingRoll ? '✅ তথ্য আপডেট হয়েছে!' : '✅ নতুন শিক্ষার্থী যোগ করা হয়েছে!');
+    alert("শিক্ষার্থীর তথ্য আপডেট করা হয়েছে!");
   }
 
   function editStudent(key) {
@@ -883,18 +876,9 @@
     document.getElementById('stuPrac').value = student.prac || '';
 
     editingRoll = key;
-    document.getElementById('formTitle').innerText = `✏️ রোল ${student.rollDisplay} সংশোধন করুন:`;
+    document.getElementById('formTitle').innerText = `✏️ রোল ${student.rollDisplay} এর তথ্য সংশোধন করুন:`;
     document.getElementById('btnSaveStudent').innerText = 'আপডেট করুন';
     document.getElementById('btnSaveStudent').style.background = '#f39c12';
-    window.scrollTo(0, 0);
-  }
-
-  function deleteStudent(key) {
-    if (confirm('এই শিক্ষার্থীকে মুছে ফেলতে চান?')) {
-      delete studentData[key];
-      renderTables();
-      showAlert('✅ শিক্ষার্থী মুছে ফেলা হয়েছে!');
-    }
   }
 
   function resetForm() {
@@ -915,55 +899,40 @@
 
     const reader = new FileReader();
     reader.onload = function(e) {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        if (jsonData.length === 0) {
-          showAlert('⚠️ এক্সেল ফাইল খালি আছে', true);
-          return;
+      studentData = {};
+      jsonData.forEach(row => {
+        const roll = row.Roll || row['রোল'];
+        if (roll !== undefined && roll !== null) {
+          const rollStr = roll.toString().trim();
+          studentData[rollStr] = {
+            rollDisplay: rollStr,
+            name: row.Name || row['নাম'] || '',
+            group: row.Group || row['গ্রুপ'] || 'বিজ্ঞান',
+            cq: row.CQ || row['রচনা'] || '',
+            mcq: row.MCQ || row['নৈর্ব্যক্তিক'] || '',
+            prac: row.Practical || row['ব্যবহারিক'] || '',
+            total: row.Total || row['মোট'] || '',
+            gpa: row.GPA || row['জিডিএ'] || ''
+          };
         }
+      });
 
-        studentData = {};
-        jsonData.forEach(row => {
-          const roll = row.Roll || row.রোল || row.roll;
-          if (roll !== undefined && roll !== null) {
-            const rollStr = roll.toString().trim();
-            studentData[rollStr] = {
-              rollDisplay: rollStr,
-              name: row.Name || row.নাম || row.name || '',
-              group: row.Group || row.গ্রুপ || row.group || 'বিজ্ঞান',
-              cq: row.CQ || row.রচনা || row.cq || '',
-              mcq: row.MCQ || row.নৈর্ব্যক্তিক || row.mcq || '',
-              prac: row.Practical || row.ব্যবহারিক || row.practical || '',
-              total: row.Total || row.মোট || row.total || '',
-              gpa: row.GPA || row.জিডিএ || row.gpa || ''
-            };
-          }
-        });
-
-        renderTables();
-        showAlert(`✅ ${jsonData.length} জন শিক্ষার্থী লোড করা হয়েছে!`);
-      } catch (err) {
-        showAlert('❌ ফাইল পড়তে ত্রুটি: ' + err.message, true);
-      }
+      renderTables();
+      alert("এক্সেল ডাটা লোড হয়েছে!");
     };
     reader.readAsArrayBuffer(file);
   }
 
-  /* Storage Logic */
   function saveToStorage() {
     const cls = document.getElementById('inClass').value;
     const sec = document.getElementById('inSection').value;
     const sub = document.getElementById('inSubject').value;
-
-    if (Object.keys(studentData).length === 0) {
-      showAlert('⚠️ কোনো শিক্ষার্থী নেই', true);
-      return;
-    }
 
     const recordKey = `SchoolData_${cls}_${sec}_${sub}`;
     const payload = {
@@ -977,14 +946,13 @@
     };
 
     localStorage.setItem(recordKey, JSON.stringify(payload));
-    showAlert(`✅ শ্রেণি ${cls} (${sub}) সেভ হয়েছে!`);
+    alert(`শ্রেণি ${cls} (${sub}) এর তথ্য সেভ হয়েছে!`);
     renderStorageUI();
   }
 
   function renderStorageUI() {
     const container = document.getElementById('storageContainer');
     container.innerHTML = '';
-
     const classes = ['৬ষ্ঠ', '৭ম', '৮ম', '৯ম', '১০ম'];
 
     classes.forEach(c => {
@@ -1001,8 +969,8 @@
           const div = document.createElement('div');
           div.className = 'storage-item';
           div.innerHTML = `
-            <span><b>${item.section}</b> - ${item.subject}</span>
-            <div style="display: flex; gap: 4px;">
+            <span><b>${item.section} শাখা</b> - ${item.subject}</span>
+            <div>
               <button class="btn" style="padding: 2px 6px; font-size: 10px;" onclick="loadRecord('${key}')">লোড</button>
               <button class="btn btn-danger" style="padding: 2px 6px; font-size: 10px;" onclick="deleteRecord('${key}')">মুছুন</button>
             </div>
@@ -1012,7 +980,7 @@
       }
 
       if (!hasItems) {
-        card.innerHTML += `<div style="color: #888; font-style: italic; padding: 5px;">কোনো ডাটা নেই</div>`;
+        card.innerHTML += `<div style="color: #888; font-style: italic;">কোনো ডাটা সেভ নেই</div>`;
       }
       container.appendChild(card);
     });
@@ -1033,14 +1001,13 @@
     toggleGroupVisibility();
     updateHeader();
     renderTables();
-    showAlert(`✅ শ্রেণি ${data.className} লোড হয়েছে!`);
+    alert(`শ্রেণি ${data.className} (${data.subject}) এর ডাটা লোড হয়েছে!`);
   }
 
   function deleteRecord(key) {
-    if (confirm('সত্যি মুছে ফেলবেন?')) {
+    if (confirm("আপনি কি নিশ্চিত যে ডাটা মুছে ফেলতে চান?")) {
       localStorage.removeItem(key);
       renderStorageUI();
-      showAlert('✅ ডাটা মুছে ফেলা হয়েছে!');
     }
   }
 
@@ -1131,13 +1098,12 @@
     if (currentMode === 'tabulation-68' || currentMode === 'tabulation-910') {
       printStyle.innerHTML = '@page { size: A4 landscape; margin: 4mm; }';
     } else {
-      printStyle.innerHTML = '@page { size: A4 portrait; margin: 4mm; }';
+      printStyle.innerHTML = '@page { size: A4 portrait; margin: 3mm; }';
     }
 
     window.print();
   }
 
-  // Initialize
   toggleGroupVisibility();
   renderTables();
   renderStorageUI();
