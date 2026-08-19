@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>দলইনগর উচ্চ বিদ্যালয় - সমন্বিত নম্বর, ট্যাবুলিশন ও অ্যাডমিট কার্ড</title>
+  <!-- Excel Reader (SheetJS) Library -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Serif Bengali', serif;
+      background-color: #f0f3f5;
+      margin: 0;
+      padding: 10px;
+      color: #000;
+    }
+
+    .controls {
+      max-width: 280mm;
+      margin: 0 auto 15px auto;
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 8px;
+      border: none;
+      background: #34495e;
+      color: white;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn:hover { background: #5a7a8a; }
+    .tab-btn.active { background: #e67e22; box-shadow: 0 0 8px rgba(230, 126, 34, 0.5); }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .controls input, .controls select {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 12px;
+      background: white;
+      color: #000;
+    }
+
+    .student-entry-panel, .storage-panel {
+      background: #34495e;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover { background: #229954; }
+    .btn-edit { background: #f39c12; }
+    .btn-edit:hover { background: #e67e22; }
+    .btn-danger { background: #e74c3c; }
+    .btn-danger:hover { background: #c0392b; }
+
+    .btn-print {
+      background: #2980b9;
+      color: white;
+      border: none;
+      width: 100%;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-print:hover { background: #2471a3; }
+
+    /* Class Storage Area */
+    .class-storage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .storage-card {
+      background: #1a252f;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .storage-card h4 {
+      margin: 0 0 5px 0;
+      color: #f39c12;
+      border-bottom: 1px solid #555;
+      padding-bottom: 3px;
+    }
+
+    .storage-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2c3e50;
+      padding: 4px 6px;
+      margin-bottom: 4px;
+      border-radius: 3px;
+    }
+
+    /* Paper Setup */
+    .paper {
+      background: #fff;
+      margin: 0 auto;
+      padding: 5mm 8mm;
+      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .paper.portrait {
+      width: 210mm;
+      min-height: 295mm;
+    }
+
+    .paper.landscape {
+      width: 297mm;
+      min-height: 205mm;
+    }
+
+    .school-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .exam-title {
+      text-align: center;
+      font-size: 12px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tabulation-header {
+      justify-content: center !important;
+      gap: 15px;
+    }
+
+    .dotted-line {
+      border-bottom: 1px dotted #000;
+      display: inline-block;
+      min-width: 40px;
+      padding: 0 2px;
+      text-align: center;
+    }
+
+    /* Tables Configuration */
+    .tabulation-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1px;
+    }
+
+    .tabulation-table th, .tabulation-table td {
+      border: 1px solid #000;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .paper.portrait .tabulation-table { font-size: 10px; }
+    .paper.portrait .tabulation-table th { padding: 2px 1px; background-color: #f9f9f9; font-weight: bold; }
+    .paper.portrait .tabulation-table td { height: 18.5px; padding: 0 2px; }
+
+    .paper.landscape .tabulation-table { font-size: 9px; }
+    .paper.landscape .tabulation-table th { font-size: 8px; padding: 2px 1px; background-color: #f9f9f9; font-weight: bold; }
+    .paper.landscape .tabulation-table td { height: 18px; padding: 0 1px; }
+
+    .name-col { text-align: left !important; padding-left: 4px !important; }
+    .action-btn-cell { display: flex; gap: 2px; justify-content: center; }
+
+    .footer-stats { margin-top: 4px; font-size: 10px; font-weight: 600; }
+    .footer-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 10.5px;
+      font-weight: bold;
+    }
+
+    .signature-box {
+      border-top: 1px dashed #000;
+      padding-top: 1px;
+      width: 28%;
+      text-align: center;
+    }
+
+    /* Admit Card Page & Grid Layout (Strictly 4 Cards per Page) */
+    .admit-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 130mm 130mm;
+      gap: 10mm;
+      page-break-after: always;
+      height: 270mm;
+      box-sizing: border-box;
+    }
+
+    .admit-card {
+      border: 2px solid #1a252f;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+
+    .admit-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1.5px solid #000;
+      padding-bottom: 5px;
+    }
+
+    .admit-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .admit-header-text {
+      flex: 1;
+      text-align: center;
+    }
+
+    .admit-header-text h3 { margin: 0; font-size: 14px; color: #000; }
+    .admit-header-text p { margin: 2px 0 0 0; font-size: 10px; font-weight: bold; }
+
+    .admit-badge-container {
+      text-align: center;
+      margin: 6px 0;
+    }
+
+    .admit-badge {
+      display: inline-block;
+      background: #1a252f;
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 3px;
+      font-size: 10.5px;
+      font-weight: bold;
+    }
+
+    .admit-details {
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    .admit-details table { width: 100%; border: none; border-collapse: collapse; }
+    .admit-details td { text-align: left; border: none; height: auto; padding: 3px 0; font-size: 11px; }
+
+    .admit-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 9.5px;
+      font-weight: bold;
+    }
+
+    .admit-sig-box {
+      border-top: 1px dashed #000;
+      width: 42%;
+      text-align: center;
+      padding-top: 2px;
+    }
+
+    .template-view { display: none; }
+    .template-view.active { display: block; }
+
+    /* Alert Box */
+    .alert-box {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #27ae60;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 4px;
+      z-index: 9999;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease;
+    }
+
+    .alert-box.show { display: block; }
+    .alert-box.error { background: #e74c3c; }
+
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Strict Print Styles */
+    @media print {
+      body { background: none; padding: 0; }
+      .controls { display: none !important; }
+      .action-col { display: none !important; }
+      .paper { box-shadow: none; margin: 0; padding: 4mm; width: 100% !important; }
+      .admit-page {
+        height: 280mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Alert Notification -->
+  <div class="alert-box" id="alertBox"></div>
+
+  <!-- কন্ট্রোল প্যানেল -->
+  <div class="controls">
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTemplate('general')">সাধারণ নম্বর ফর্দ</button>
+      <button class="tab-btn" onclick="switchTemplate('bangla-english')">বাংলা ও ইংরেজি</button>
+      <button class="tab-btn" onclick="switchTemplate('tabulation-68')">৬-৮ম ট্যাবুলিশন</button>
+      <button class="tab-btn" onclick="switchTemplate('tabulation-910')">৯-১০ম ট্যাবুলিশন</button>
+      <button class="tab-btn" style="background: #8e44ad;" onclick="switchTemplate('admit-card')">🎟️ এডমিট কার্ড</button>
+    </div>
+
+    <div class="controls-grid">
+      <select id="inClass" onchange="toggleGroupVisibility(); updateHeader();">
+        <option value="৬ষ্ঠ">শ্রেণি: ৬ষ্ঠ</option>
+        <option value="৭ম">শ্রেণি: ৭ম</option>
+        <option value="৮ম">শ্রেণি: ৮ম</option>
+        <option value="৯ম" selected>শ্রেণি: ৯ম</option>
+        <option value="১০ম">শ্রেণি: ১০ম</option>
+      </select>
+
+      <select id="inGroup" onchange="updateHeader(); renderTables();">
+        <option value="সকল" selected>গ্রুপ: সকল</option>
+        <option value="বিজ্ঞান">বিজ্ঞান</option>
+        <option value="মানবিক">মানবিক</option>
+        <option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option>
+      </select>
+
+      <select id="inSection" onchange="updateHeader()">
+        <option value="ক" selected>শাখা: ক</option>
+        <option value="খ">শাখা: খ</option>
+      </select>
+
+      <input type="text" id="inSubject" value="পদার্থ বিজ্ঞান" placeholder="বিষয়">
+      <input type="text" id="inMarks" value="১০০" placeholder="পূর্ণমান">
+      <input type="text" id="inExam" value="বার্ষিক পরীক্ষা - ২০২৬" placeholder="পরীক্ষার নাম">
+    </div>
+
+    <!-- তথ্য এন্ট্রি ও এডিট প্যানেল -->
+    <div class="student-entry-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="flex: 1;">
+          <label style="font-size: 12px; font-weight: bold;">📁 Excel / CSV ফাইল লোড করুন:</label>
+          <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" onchange="loadExcelData(event)" style="background: white; color: black; font-size: 11px;">
+        </div>
+        <button class="btn" style="background: #e67e22;" onclick="saveToStorage()">💾 শ্রেণি ডাটা সেভ করুন</button>
+      </div>
+
+      <hr style="border: 0.5px solid #555; margin: 8px 0;">
+
+      <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;" id="formTitle">✍️ ম্যানুয়ালি নতুন তথ্য যুক্ত করুন:</div>
+      <div class="controls-grid" style="grid-template-columns: auto 1fr 120px 60px 60px 60px 80px;">
+        <input type="text" id="stuRoll" placeholder="রোল" style="max-width: 80px;">
+        <input type="text" id="stuName" placeholder="শিক্ষার্থীর নাম">
+        <select id="stuGroup">
+          <option value="বিজ্ঞান">বিজ্ঞান</option>
+          <option value="মানবিক">মানবিক</option>
+          <option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option>
+        </select>
+        <input type="text" id="stuCq" placeholder="রচনা" style="max-width: 60px;">
+        <input type="text" id="stuMcq" placeholder="নৈর্ব্যক্তিক" style="max-width: 60px;">
+        <input type="text" id="stuPrac" placeholder="ব্যব/GPA" style="max-width: 60px;">
+        <button class="btn" id="btnSaveStudent" onclick="addOrUpdateStudent()">সেভ করুন</button>
+      </div>
+    </div>
+
+    <!-- শ্রেণি ভিত্তিক সেভ করা ডাটা সেকশন -->
+    <div class="storage-panel">
+      <div style="font-size: 13px; font-weight: bold; color: #f39c12;">📂 সেভ করা শ্রেণির তালিকা (Class Storage)</div>
+      <div class="class-storage-grid" id="storageContainer"></div>
+    </div>
+
+    <button class="btn-print" onclick="printPage()">🖨️ A4 পেজে প্রিন্ট / PDF সেভ করুন</button>
+  </div>
+
+  <!-- প্রিন্টযোগ্য মূল A4 কাগজ -->
+  <div class="paper portrait" id="mainPaper">
+    <div id="standardHeader">
+      <div class="school-title">দলইনগর উচ্চ বিদ্যালয়</div>
+      <div class="exam-title">
+        <span id="outExam">বার্ষিক পরীক্ষা - ২০২৬</span>
+      </div>
+
+      <!-- নম্বর ফর্দ মেটা ইনফো -->
+      <div class="meta-info" id="numberSheetMeta">
+        <div>
+          শ্রেণি- <span id="outClass" class="dotted-line">৯ম</span> 
+          <span id="outGroupWrapper">গ্রুপ- <span id="outGroup" class="dotted-line">বিজ্ঞান</span></span>
+          শাখা- <span id="outSection" class="dotted-line">ক</span> 
+        </div>
+        <div>বিষয়:- <span id="outSubject" class="dotted-line">পদার্থ বিজ্ঞান</span></div>
+        <div>পূর্ণমান :- <span id="outMarks" class="dotted-line">১০০</span></div>
+      </div>
+
+      <!-- ট্যাবুলিশন শিট মেটা ইনফো -->
+      <div class="meta-info tabulation-header" id="tabulationMeta" style="display: none;">
+        <div>শ্রেণি- <span id="tabClass" class="dotted-line">৯ম</span></div>
+        <div>শাখা- <span id="tabSection" class="dotted-line">ক</span></div>
+      </div>
+    </div>
+
+    <!-- ১. সাধারণ নম্বর ফর্দ -->
+    <div id="generalView" class="template-view active">
+      <table class="tabulation-table">
+        <thead>
+          <tr>
+            <th style="width: 8%;">রোল</th>
+            <th style="width: 38%;">শিক্ষার্থীর নাম</th>
+            <th style="width: 10%;">নৈর্ব্যক্তিক</th>
+            <th style="width: 10%;">রচনামূলক</th>
+            <th style="width: 10%;">ব্যবহারিক</th>
+            <th style="width: 8%;">মোট</th>
+            <th style="width: 8%;">জি.পি.এ</th>
+            <th class="action-col" style="width: 8%;">একশন</th>
+          </tr>
+        </thead>
+        <tbody id="generalTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ২. বাংলা ও ইংরেজি নম্বর ফর্দ -->
+    <div id="banglaEnglishView" class="template-view">
+      <table class="tabulation-table">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width: 8%;">রোল</th>
+            <th rowspan="2" style="width: 30%;">শিক্ষার্থীর নাম</th>
+            <th colspan="2" style="width: 18%;">বাংলা ১ম</th>
+            <th colspan="2" style="width: 18%;">বাংলা ২য়</th>
+            <th colspan="2" style="width: 10%;">মোট</th>
+            <th rowspan="2" style="width: 8%;">সর্বমোট</th>
+            <th class="action-col" rowspan="2" style="width: 8%;">একশন</th>
+          </tr>
+          <tr>
+            <th style="width: 9%;">রচনা</th>
+            <th style="width: 9%;">নৈ.ব্যা.</th>
+            <th style="width: 9%;">রচনা</th>
+            <th style="width: 9%;">নৈ.ব্যা.</th>
+            <th style="width: 5%;">রচনা</th>
+            <th style="width: 5%;">নৈ.ব্যা.</th>
+          </tr>
+        </thead>
+        <tbody id="beTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ৩. ৬ষ্ঠ-৮ম শ্রেণি ট্যাবুলিশন শিট -->
+    <div id="tabulation68View" class="template-view">
+      <table class="tabulation-table">
+        <thead>
+          <tr>
+            <th style="width: 4%;">রোল</th>
+            <th style="width: 16%;">শিক্ষার্থীর নাম</th>
+            <th style="width: 5%;">বাংলা ১ম</th>
+            <th style="width: 5%;">বাংলা ২য়</th>
+            <th style="width: 5%;">মোট</th>
+            <th style="width: 5%;">ইংরেজি ১ম</th>
+            <th style="width: 5%;">ইংরেজি ২য়</th>
+            <th style="width: 5%;">মোট</th>
+            <th style="width: 6%;">গণিত</th>
+            <th style="width: 6%;">বিজ্ঞান</th>
+            <th style="width: 6%;">বিজিএস</th>
+            <th style="width: 6%;">ধর্ম</th>
+            <th style="width: 6%;">আইসিটি</th>
+            <th style="width: 6%;">সর্বমোট</th>
+            <th style="width: 8%;">মন্তব্য</th>
+          </tr>
+        </thead>
+        <tbody id="tab68TableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ৪. ৯ম-১০ম শ্রেণি ট্যাবুলিশন শিট -->
+    <div id="tabulation910View" class="template-view">
+      <table class="tabulation-table">
+        <thead>
+          <tr>
+            <th style="width: 3.5%;">রোল</th>
+            <th style="width: 13%;">শিক্ষার্থীর নাম</th>
+            <th style="width: 3.5%;">বাংলা ১</th>
+            <th style="width: 3.5%;">বাংলা ২</th>
+            <th style="width: 3.5%;">মোট</th>
+            <th style="width: 3.5%;">ইংরেজি ১</th>
+            <th style="width: 3.5%;">ইংরেজি ২</th>
+            <th style="width: 3.5%;">মোট</th>
+            <th style="width: 4%;">গণিত</th>
+            <th style="width: 4%;">বিজ্ঞান</th>
+            <th style="width: 6%;">গ্রুপ-১</th>
+            <th style="width: 6%;">গ্রুপ-২</th>
+            <th style="width: 6%;">গ্রুপ-৩</th>
+            <th style="width: 6%;">সাধারণ</th>
+            <th style="width: 6%;">ঐচ্ছিক</th>
+            <th style="width: 4%;">আইসিটি</th>
+            <th style="width: 4%;">সর্বমোট</th>
+            <th style="width: 5%;">মন্তব্য</th>
+          </tr>
+        </thead>
+        <tbody id="tab910TableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ৫. এডমিট কার্ড জেনারেটর ভিউ -->
+    <div id="admitCardView" class="template-view">
+      <div id="admitPagesContainer">
+        <!-- JS দিয়ে প্রতি পেজে ৪টি করে এডমিট কার্ড তৈরি হবে -->
+      </div>
+    </div>
+
+    <!-- ফুটার ও স্বাক্ষর সেকশন -->
+    <div id="footerSection">
+      <div class="footer-stats" id="footerStats">
+        <div class="footer-row">
+          <div>মোট - ....................জন,</div>
+          <div>পাশ- ....................জন,</div>
+          <div>ফেল- ....................জন,</div>
+        </div>
+      </div>
+
+      <div class="signature-section">
+        <div class="signature-box">বিষয় শিক্ষকের স্বাক্ষর</div>
+        <div class="signature-box">শ্রেণি শিক্ষকের স্বাক্ষর</div>
+        <div class="signature-box">প্রধান শিক্ষকের স্বাক্ষর</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let currentMode = 'general';
+  let studentData = {};
+  let editingRoll = null;
+
+  // Alert Notification Function
+  function showAlert(msg, isError = false) {
+    const box = document.getElementById('alertBox');
+    box.textContent = msg;
+    box.classList.add('show');
+    box.classList.toggle('error', isError);
+    setTimeout(() => box.classList.remove('show'), 3000);
+  }
+
+  // বাংলা সংখ্যাকে ইংরেজিতে রূপান্তর করার ফাংশন
+  function banglaToEnglishNum(str) {
+    if(!str) return '';
+    const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    const enDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let result = str.toString();
+    for (let i = 0; i < 10; i++) {
+      result = result.replace(new RegExp(bnDigits[i], 'g'), enDigits[i]);
+    }
+    return result;
+  }
+
+  function toggleGroupVisibility() {
+    const selectedClass = document.getElementById('inClass').value;
+    const groupSelect = document.getElementById('inGroup');
+    const groupWrapper = document.getElementById('outGroupWrapper');
+
+    if (selectedClass === '৯ম' || selectedClass === '১০ম') {
+      groupSelect.style.display = 'inline-block';
+      groupWrapper.style.display = 'inline';
+    } else {
+      groupSelect.style.display = 'none';
+      groupWrapper.style.display = 'none';
+    }
+  }
+
+  function renderTables() {
+    const selectedGroup = document.getElementById('inGroup').value;
+    const selectedClass = document.getElementById('inClass').value;
+    const isNineTen = (selectedClass === '৯ম' || selectedClass === '১০ম');
+
+    let filteredList = [];
+    Object.keys(studentData).forEach(roll => {
+      const s = studentData[roll];
+      if (!isNineTen || selectedGroup === 'সকল' || s.group === selectedGroup) {
+        filteredList.push({ rollKey: roll, ...s });
+      }
+    });
+
+    // রোল সর্টিং
+    filteredList.sort((a, b) => {
+      let numA = parseInt(banglaToEnglishNum(a.rollDisplay)) || 0;
+      let numB = parseInt(banglaToEnglishNum(b.rollDisplay)) || 0;
+      return numA - numB;
+    });
+
+    // 1. General Table
+    const genBody = document.getElementById('generalTableBody');
+    genBody.innerHTML = '';
+    for (let i = 0; i < 30; i++) {
+      const student = filteredList[i] || {};
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
+
+      const actionBtn = student.rollKey ? 
+        `<div class="action-btn-cell">
+          <button class="btn btn-edit" style="padding: 1px 4px; font-size: 9px;" onclick="editStudent('${student.rollKey}')">এডিট</button>
+          <button class="btn btn-danger" style="padding: 1px 4px; font-size: 9px;" onclick="deleteStudent('${student.rollKey}')">ডেলিট</button>
+        </div>` : '';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rollText}</td>
+        <td class="name-col">${student.name || ''}</td>
+        <td>${student.mcq || ''}</td>
+        <td>${student.cq || ''}</td>
+        <td>${student.prac || ''}</td>
+        <td>${student.total || ''}</td>
+        <td>${student.gpa || ''}</td>
+        <td class="action-col">${actionBtn}</td>
+      `;
+      genBody.appendChild(tr);
+    }
+
+    // 2. Bangla/English Table
+    const beBody = document.getElementById('beTableBody');
+    beBody.innerHTML = '';
+    for (let i = 0; i < 30; i++) {
+      const student = filteredList[i] || {};
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '०' + (i + 1) : (i + 1));
+
+      const actionBtn = student.rollKey ? 
+        `<div class="action-btn-cell">
+          <button class="btn btn-edit" style="padding: 1px 4px; font-size: 9px;" onclick="editStudent('${student.rollKey}')">এডিট</button>
+        </div>` : '';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rollText}</td>
+        <td class="name-col">${student.name || ''}</td>
+        <td>${student.b1cq || ''}</td>
+        <td>${student.b1mcq || ''}</td>
+        <td>${student.b2cq || ''}</td>
+        <td>${student.b2mcq || ''}</td>
+        <td>${student.totCq || ''}</td>
+        <td>${student.totMcq || ''}</td>
+        <td>${student.grandTotal || ''}</td>
+        <td class="action-col">${actionBtn}</td>
+      `;
+      beBody.appendChild(tr);
+    }
+
+    // 3. Tabulation Sheet (Class 6-8)
+    const tab68Body = document.getElementById('tab68TableBody');
+    tab68Body.innerHTML = '';
+    for (let i = 0; i < 25; i++) {
+      const student = filteredList[i] || {};
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '০' + (i + 1) : (i + 1));
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rollText}</td>
+        <td class="name-col">${student.name || ''}</td>
+        <td>${student.b1 || ''}</td>
+        <td>${student.b2 || ''}</td>
+        <td>${student.bTot || ''}</td>
+        <td>${student.e1 || ''}</td>
+        <td>${student.e2 || ''}</td>
+        <td>${student.eTot || ''}</td>
+        <td>${student.math || ''}</td>
+        <td>${student.sci || ''}</td>
+        <td>${student.bgs || ''}</td>
+        <td>${student.rel || ''}</td>
+        <td>${student.ict || ''}</td>
+        <td>${student.grandTotal || ''}</td>
+        <td>${student.remark || ''}</td>
+      `;
+      tab68Body.appendChild(tr);
+    }
+
+    // 4. Tabulation Sheet (Class 9-10)
+    const tab910Body = document.getElementById('tab910TableBody');
+    tab910Body.innerHTML = '';
+    for (let i = 0; i < 25; i++) {
+      const student = filteredList[i] || {};
+      const rollText = student.rollDisplay || (i + 1 < 10 ? '०' + (i + 1) : (i + 1));
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rollText}</td>
+        <td class="name-col">${student.name || ''}</td>
+        <td>${student.b1 || ''}</td>
+        <td>${student.b2 || ''}</td>
+        <td>${student.bTot || ''}</td>
+        <td>${student.e1 || ''}</td>
+        <td>${student.e2 || ''}</td>
+        <td>${student.eTot || ''}</td>
+        <td>${student.math || ''}</td>
+        <td>${student.sci || ''}</td>
+        <td>${student.grpSub1 || ''}</td>
+        <td>${student.grpSub2 || ''}</td>
+        <td>${student.grpSub3 || ''}</td>
+        <td>${student.genSub || ''}</td>
+        <td>${student.optSub || ''}</td>
+        <td>${student.ict || ''}</td>
+        <td>${student.grandTotal || ''}</td>
+        <td>${student.remark || ''}</td>
+      `;
+      tab910Body.appendChild(tr);
+    }
+
+    renderAdmitCards(filteredList);
+  }
+
+  // এডমিট কার্ড জেনারেটর
+  function renderAdmitCards(students) {
+    const container = document.getElementById('admitPagesContainer');
+    container.innerHTML = '';
+
+    const examName = document.getElementById('inExam').value;
+    const clsName = document.getElementById('inClass').value;
+    const secName = document.getElementById('inSection').value;
+
+    if (students.length === 0) {
+      container.innerHTML = `<div style="text-align: center; padding: 30px; color: #777; font-size: 14px;">📋 শিক্ষার্থীর তথ্য যুক্ত করলে এডমিট কার্ড তৈরি হবে</div>`;
+      return;
+    }
+
+    // SVG Logo as Data URL
+    const logoSVG = `data:image/svg+xml,%3Csvg width='50' height='50' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='%231a252f' width='50' height='50' rx='5'/%3E%3Ctext x='25' y='28' text-anchor='middle' font-size='24' font-weight='bold' fill='%23fff' font-family='Arial'%3E📚%3C/text%3E%3C/svg%3E`;
+
+    for (let i = 0; i < students.length; i += 4) {
+      const pageChunk = students.slice(i, i + 4);
+      const pageDiv = document.createElement('div');
+      pageDiv.className = 'admit-page';
+
+      pageChunk.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'admit-card';
+        const idNum = 202600 + (parseInt(banglaToEnglishNum(s.rollDisplay)) || 0);
+        
+        card.innerHTML = `
+          <div>
+            <div class="admit-card-header">
+              <img src="${logoSVG}" class="admit-logo" alt="Logo">
+              <div class="admit-header-text">
+                <h3>দলইনগর উচ্চ বিদ্যালয়</h3>
+                <p>রাউজান, চট্টগ্রাম</p>
+                <p style="font-size: 9px;">${examName}</p>
+              </div>
+            </div>
+
+            <div class="admit-badge-container">
+              <span class="admit-badge">🎟️ প্রবেশ পত্র</span>
+            </div>
+
+            <div class="admit-details">
+              <table>
+                <tr><td><b>নাম:</b></td><td><b>${s.name || '.....................'}</b></td></tr>
+                <tr><td><b>শ্রেণি:</b> ${clsName}</td><td><b>শাখা:</b> ${secName}</td></tr>
+                <tr><td><b>রোল:</b> ${s.rollDisplay}</td><td><b>গ্রুপ:</b> ${s.group || 'সাধারণ'}</td></tr>
+                <tr><td colspan="2"><b>পরীক্ষা কোড:</b> ${idNum}</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="admit-footer">
+            <div class="admit-sig-box">শ্রেণি শিক্ষক</div>
+            <div class="admit-sig-box">প্রধান শিক্ষক</div>
+          </div>
+        `;
+        pageDiv.appendChild(card);
+      });
+
+      container.appendChild(pageDiv);
+    }
+  }
+
+  // নতুন এন্ট্রি বা এডিট সেভ করা
+  function addOrUpdateStudent() {
+    const rawRoll = document.getElementById('stuRoll').value.trim();
+    const name = document.getElementById('stuName').value.trim();
+    const group = document.getElementById('stuGroup').value;
+    const cq = document.getElementById('stuCq').value;
+    const mcq = document.getElementById('stuMcq').value;
+    const prac = document.getElementById('stuPrac').value;
+
+    if (!rawRoll || !name) {
+      showAlert('❌ রোল এবং নাম প্রদান করুন', true);
+      return;
+    }
+
+    const key = editingRoll || rawRoll;
+    const cqNum = parseFloat(banglaToEnglishNum(cq)) || 0;
+    const mcqNum = parseFloat(banglaToEnglishNum(mcq)) || 0;
+    const pracNum = parseFloat(banglaToEnglishNum(prac)) || 0;
+
+    studentData[key] = {
+      ...(studentData[key] || {}),
+      rollDisplay: rawRoll,
+      name: name,
+      group: group,
+      cq: cq,
+      mcq: mcq,
+      prac: prac,
+      total: (cqNum + mcqNum + pracNum) || '',
+      gpa: ''
+    };
+
+    renderTables();
+    resetForm();
+    showAlert(editingRoll ? '✅ তথ্য আপডেট হয়েছে!' : '✅ নতুন শিক্ষার্থী যোগ করা হয়েছে!');
+  }
+
+  function editStudent(key) {
+    const student = studentData[key];
+    if (!student) return;
+
+    document.getElementById('stuRoll').value = student.rollDisplay || key;
+    document.getElementById('stuName').value = student.name || '';
+    document.getElementById('stuGroup').value = student.group || 'বিজ্ঞান';
+    document.getElementById('stuCq').value = student.cq || '';
+    document.getElementById('stuMcq').value = student.mcq || '';
+    document.getElementById('stuPrac').value = student.prac || '';
+
+    editingRoll = key;
+    document.getElementById('formTitle').innerText = `✏️ রোল ${student.rollDisplay} সংশোধন করুন:`;
+    document.getElementById('btnSaveStudent').innerText = 'আপডেট করুন';
+    document.getElementById('btnSaveStudent').style.background = '#f39c12';
+    window.scrollTo(0, 0);
+  }
+
+  function deleteStudent(key) {
+    if (confirm('এই শিক্ষার্থীকে মুছে ফেলতে চান?')) {
+      delete studentData[key];
+      renderTables();
+      showAlert('✅ শিক্ষার্থী মুছে ফেলা হয়েছে!');
+    }
+  }
+
+  function resetForm() {
+    editingRoll = null;
+    document.getElementById('stuRoll').value = '';
+    document.getElementById('stuName').value = '';
+    document.getElementById('stuCq').value = '';
+    document.getElementById('stuMcq').value = '';
+    document.getElementById('stuPrac').value = '';
+    document.getElementById('formTitle').innerText = '✍️ ম্যানুয়ালি নতুন তথ্য যুক্ত করুন:';
+    document.getElementById('btnSaveStudent').innerText = 'সেভ করুন';
+    document.getElementById('btnSaveStudent').style.background = '#27ae60';
+  }
+
+  function loadExcelData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (jsonData.length === 0) {
+          showAlert('⚠️ এক্সেল ফাইল খালি আছে', true);
+          return;
+        }
+
+        studentData = {};
+        jsonData.forEach(row => {
+          const roll = row.Roll || row.রোল || row.roll;
+          if (roll !== undefined && roll !== null) {
+            const rollStr = roll.toString().trim();
+            studentData[rollStr] = {
+              rollDisplay: rollStr,
+              name: row.Name || row.নাম || row.name || '',
+              group: row.Group || row.গ্রুপ || row.group || 'বিজ্ঞান',
+              cq: row.CQ || row.রচনা || row.cq || '',
+              mcq: row.MCQ || row.নৈর্ব্যক্তিক || row.mcq || '',
+              prac: row.Practical || row.ব্যবহারিক || row.practical || '',
+              total: row.Total || row.মোট || row.total || '',
+              gpa: row.GPA || row.জিডিএ || row.gpa || ''
+            };
+          }
+        });
+
+        renderTables();
+        showAlert(`✅ ${jsonData.length} জন শিক্ষার্থী লোড করা হয়েছে!`);
+      } catch (err) {
+        showAlert('❌ ফাইল পড়তে ত্রুটি: ' + err.message, true);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  /* Storage Logic */
+  function saveToStorage() {
+    const cls = document.getElementById('inClass').value;
+    const sec = document.getElementById('inSection').value;
+    const sub = document.getElementById('inSubject').value;
+
+    if (Object.keys(studentData).length === 0) {
+      showAlert('⚠️ কোনো শিক্ষার্থী নেই', true);
+      return;
+    }
+
+    const recordKey = `SchoolData_${cls}_${sec}_${sub}`;
+    const payload = {
+      className: cls,
+      section: sec,
+      subject: sub,
+      exam: document.getElementById('inExam').value,
+      group: document.getElementById('inGroup').value,
+      marks: document.getElementById('inMarks').value,
+      students: studentData
+    };
+
+    localStorage.setItem(recordKey, JSON.stringify(payload));
+    showAlert(`✅ শ্রেণি ${cls} (${sub}) সেভ হয়েছে!`);
+    renderStorageUI();
+  }
+
+  function renderStorageUI() {
+    const container = document.getElementById('storageContainer');
+    container.innerHTML = '';
+
+    const classes = ['৬ষ্ঠ', '৭ম', '৮ম', '৯ম', '১০ম'];
+
+    classes.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'storage-card';
+      card.innerHTML = `<h4>শ্রেণি: ${c}</h4>`;
+
+      let hasItems = false;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`SchoolData_${c}_`)) {
+          hasItems = true;
+          const item = JSON.parse(localStorage.getItem(key));
+          const div = document.createElement('div');
+          div.className = 'storage-item';
+          div.innerHTML = `
+            <span><b>${item.section}</b> - ${item.subject}</span>
+            <div style="display: flex; gap: 4px;">
+              <button class="btn" style="padding: 2px 6px; font-size: 10px;" onclick="loadRecord('${key}')">লোড</button>
+              <button class="btn btn-danger" style="padding: 2px 6px; font-size: 10px;" onclick="deleteRecord('${key}')">মুছুন</button>
+            </div>
+          `;
+          card.appendChild(div);
+        }
+      }
+
+      if (!hasItems) {
+        card.innerHTML += `<div style="color: #888; font-style: italic; padding: 5px;">কোনো ডাটা নেই</div>`;
+      }
+      container.appendChild(card);
+    });
+  }
+
+  function loadRecord(key) {
+    const data = JSON.parse(localStorage.getItem(key));
+    if (!data) return;
+
+    document.getElementById('inClass').value = data.className;
+    document.getElementById('inSection').value = data.section;
+    document.getElementById('inSubject').value = data.subject;
+    document.getElementById('inExam').value = data.exam;
+    document.getElementById('inGroup').value = data.group;
+    document.getElementById('inMarks').value = data.marks;
+
+    studentData = data.students || {};
+    toggleGroupVisibility();
+    updateHeader();
+    renderTables();
+    showAlert(`✅ শ্রেণি ${data.className} লোড হয়েছে!`);
+  }
+
+  function deleteRecord(key) {
+    if (confirm('সত্যি মুছে ফেলবেন?')) {
+      localStorage.removeItem(key);
+      renderStorageUI();
+      showAlert('✅ ডাটা মুছে ফেলা হয়েছে!');
+    }
+  }
+
+  function switchTemplate(mode) {
+    currentMode = mode;
+    const btns = document.querySelectorAll('.tab-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById('generalView').classList.remove('active');
+    document.getElementById('banglaEnglishView').classList.remove('active');
+    document.getElementById('tabulation68View').classList.remove('active');
+    document.getElementById('tabulation910View').classList.remove('active');
+    document.getElementById('admitCardView').classList.remove('active');
+
+    const paper = document.getElementById('mainPaper');
+    const header = document.getElementById('standardHeader');
+    const footer = document.getElementById('footerSection');
+    const numMeta = document.getElementById('numberSheetMeta');
+    const tabMeta = document.getElementById('tabulationMeta');
+
+    if (mode === 'general') {
+      btns[0].classList.add('active');
+      document.getElementById('generalView').classList.add('active');
+      paper.className = 'paper portrait';
+      header.style.display = 'block';
+      footer.style.display = 'block';
+      numMeta.style.display = 'flex';
+      tabMeta.style.display = 'none';
+    } else if (mode === 'bangla-english') {
+      btns[1].classList.add('active');
+      document.getElementById('banglaEnglishView').classList.add('active');
+      paper.className = 'paper portrait';
+      header.style.display = 'block';
+      footer.style.display = 'block';
+      numMeta.style.display = 'flex';
+      tabMeta.style.display = 'none';
+    } else if (mode === 'tabulation-68') {
+      btns[2].classList.add('active');
+      document.getElementById('tabulation68View').classList.add('active');
+      paper.className = 'paper landscape';
+      header.style.display = 'block';
+      footer.style.display = 'none';
+      numMeta.style.display = 'none';
+      tabMeta.style.display = 'flex';
+    } else if (mode === 'tabulation-910') {
+      btns[3].classList.add('active');
+      document.getElementById('tabulation910View').classList.add('active');
+      paper.className = 'paper landscape';
+      header.style.display = 'block';
+      footer.style.display = 'none';
+      numMeta.style.display = 'none';
+      tabMeta.style.display = 'flex';
+    } else if (mode === 'admit-card') {
+      btns[4].classList.add('active');
+      document.getElementById('admitCardView').classList.add('active');
+      paper.className = 'paper portrait';
+      header.style.display = 'none';
+      footer.style.display = 'none';
+    }
+    updateHeader();
+  }
+
+  function updateHeader() {
+    const cls = document.getElementById('inClass').value;
+    const sec = document.getElementById('inSection').value;
+
+    document.getElementById('outClass').innerText = cls;
+    document.getElementById('outGroup').innerText = document.getElementById('inGroup').value;
+    document.getElementById('outSection').innerText = sec;
+    document.getElementById('outSubject').innerText = document.getElementById('inSubject').value;
+    document.getElementById('outMarks').innerText = document.getElementById('inMarks').value;
+    document.getElementById('outExam').innerText = document.getElementById('inExam').value;
+
+    document.getElementById('tabClass').innerText = cls;
+    document.getElementById('tabSection').innerText = sec;
+
+    renderTables();
+  }
+
+  function printPage() {
+    let printStyle = document.getElementById('dynamicPrintStyle');
+    if (!printStyle) {
+      printStyle = document.createElement('style');
+      printStyle.id = 'dynamicPrintStyle';
+      document.head.appendChild(printStyle);
+    }
+
+    if (currentMode === 'tabulation-68' || currentMode === 'tabulation-910') {
+      printStyle.innerHTML = '@page { size: A4 landscape; margin: 4mm; }';
+    } else {
+      printStyle.innerHTML = '@page { size: A4 portrait; margin: 4mm; }';
+    }
+
+    window.print();
+  }
+
+  // Initialize
+  toggleGroupVisibility();
+  renderTables();
+  renderStorageUI();
+</script>
+
+</body>
+</html>
