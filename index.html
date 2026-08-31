@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>দলইনগর উচ্চ বিদ্যালয় - সমন্বিত নম্বর, ট্যাবুলিশন, এডমিট ও সিট কার্ড</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
+  <!-- Firebase SDK Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://dhs-school-69e77-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.dbSave = async function(path, data) {
+      try { return await set(ref(db, path), data); } catch (err) { console.error("Firebase Save Error:", err); }
+    };
+
+    window.dbGet = async function(path) {
+      try {
+        const snapshot = await get(child(ref(db), path));
+        return snapshot.exists() ? snapshot.val() : null;
+      } catch (err) { console.error("Firebase Get Error:", err); return null; }
+    };
+
+    window.dbRemove = async function(path) {
+      try { return await remove(ref(db, path)); } catch (err) { console.error("Firebase Remove Error:", err); }
+    };
+
+    window.dispatchEvent(new Event('firebase-ready'));
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+    *{box-sizing:border-box;}
+    :root{
+      --ink:#182634;
+      --navy-900:#101a26;
+      --navy-800:#18283a;
+      --navy-700:#22364c;
+      --amber:#e2872f;
+      --amber-dark:#c06f1d;
+      --emerald:#1f9d5c;
+      --emerald-dark:#17864d;
+      --ruby-dark:#c8392f;
+      --paper:#ffffff;
+      --canvas-a:#eef1f4;
+      --canvas-b:#e2e8ec;
+      --gold-line:#d9a24b;
+    }
+    body{
+      font-family:'Hind Siliguri','Noto Serif Bengali',serif;
+      background:linear-gradient(160deg,var(--canvas-a),var(--canvas-b));
+      min-height:100vh;margin:0;padding:0;color:var(--ink);
+    }
+
+    #startPage {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(180deg, rgba(10,16,24,.55), rgba(10,16,24,.82)), url("https://i.ibb.co.com/wN2RzpPb/IMG-3229.jpg") no-repeat center center/cover;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 10000; color: white; text-align: center; padding: 20px; transition: background 0.3s ease-in-out;
+    }
+    .top-corner-menu { position: absolute; top: 20px; right: 20px; z-index: 10001; }
+    .menu-btn { background: linear-gradient(135deg,var(--amber),var(--amber-dark)); color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: 600; border-radius: 999px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.35); transition: 0.2s; display: flex; align-items: center; gap: 6px; letter-spacing:.2px; }
+    .menu-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.4); }
+    .dropdown-content { display: none; position: absolute; right: 0; top: 50px; background-color: #ffffff; min-width: 220px; box-shadow: 0px 14px 32px rgba(0,0,0,0.28); border-radius: 12px; overflow: hidden; border:1px solid rgba(0,0,0,.06); }
+    .dropdown-content a, .dropdown-content label { color: var(--navy-800); padding: 13px 18px; text-decoration: none; display: block; font-size: 13px; font-weight: 600; transition: 0.15s; cursor: pointer; border-bottom:1px solid #f1f1f1; }
+    .dropdown-content a:last-child, .dropdown-content label:last-child { border-bottom: none; }
+    .dropdown-content a:hover, .dropdown-content label:hover { background-color: #f7f8f5; color: var(--emerald-dark); padding-left: 22px; }
+    .show-dropdown { display: block; animation: dropIn .18s ease; }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-6px);} to { opacity:1; transform:translateY(0);} }
+    .start-logo { width: 128px; height: 128px; border-radius: 50%; border: 4px solid rgba(255,255,255,.85); box-shadow: 0 8px 30px rgba(0,0,0,0.4); margin-bottom: 18px; object-fit: contain; background: white; }
+    .start-title { font-size: 34px; font-weight: 700; margin: 0 0 6px 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); letter-spacing:.3px; }
+    .creator-credit { font-size: 13px; font-weight: 600; color: var(--amber); margin: 0 0 16px 0; letter-spacing: 0.6px; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
+    .start-subtitle { font-size: 15px; margin-bottom: 28px; color: #dfe4e8; font-family:'Hind Siliguri',sans-serif; }
+    .enter-btn { padding: 13px 34px; font-size: 16px; font-weight: 700; background: linear-gradient(135deg,var(--emerald),var(--emerald-dark)); color: white; border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 8px 22px rgba(0,0,0,0.4); transition: 0.2s; font-family:'Hind Siliguri',sans-serif; letter-spacing:.2px; }
+    .enter-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.45); }
+
+    #loginOverlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(16,26,38,.92); display:none; justify-content:center; align-items:center; z-index:9999; }
+    .login-box { background:#fff; padding:34px 30px; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.4); width:320px; text-align:center; position: relative; font-family:'Hind Siliguri',sans-serif; border-top:4px solid var(--amber); }
+    .login-box h2 { margin-top:0; color:var(--navy-800); font-size:20px; font-family:'Noto Serif Bengali',serif; font-weight:700; }
+    .login-box input, .login-box select { width:100%; padding:11px 12px; margin:8px 0; border:1.5px solid #dfe3e6; border-radius:8px; font-size:14px; transition:.15s; font-family:'Hind Siliguri',sans-serif; }
+    .login-box input:focus, .login-box select:focus { outline:none; border-color:var(--emerald); box-shadow:0 0 0 3px rgba(31,157,92,.15); }
+    .login-box button { width:100%; padding:11px; background:linear-gradient(135deg,var(--emerald),var(--emerald-dark)); color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; margin-top:12px; transition:.15s; }
+    .login-box button:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(31,157,92,.35); }
+    
+    #appContent { display:none; padding:14px; }
+    .controls { max-width:280mm; margin:0 auto 18px; background:linear-gradient(160deg,var(--navy-800),var(--navy-900)); color:white; padding:18px 20px; border-radius:14px; box-shadow:0 12px 30px rgba(10,16,24,.25); font-family:'Hind Siliguri',sans-serif; }
+    .header-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,.12); padding-bottom:12px; flex-wrap:wrap; gap:10px; }
+    .header-bar h3 { font-family:'Noto Serif Bengali',serif; }
+    .tab-buttons { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+    .tab-btn { flex:1; min-width:130px; padding:8px 10px; border:none; background:rgba(255,255,255,.06); color:#cfd8e0; font-size:12.5px; font-weight:600; cursor:pointer; border-radius:8px; transition:.18s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+    .tab-btn select { background:rgba(0,0,0,0.3); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:2px 4px; font-size:11px; cursor:pointer; font-family:'Hind Siliguri',sans-serif; width:100%; text-align:center; }
+    .tab-btn select option { background:var(--navy-800); color:#fff; }
+    .tab-btn:hover { background:rgba(255,255,255,.12); color:#fff; }
+    .tab-btn.active { background:linear-gradient(135deg,var(--amber),var(--amber-dark)) !important; color:#fff !important; box-shadow:0 4px 12px rgba(226,135,47,.35); }
+    .controls-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:9px; margin-bottom:10px; }
+    .controls input,.controls select { padding:8px 9px; border-radius:7px; border:1px solid rgba(255,255,255,.15); font-size:12.5px; background:rgba(255,255,255,.95); transition:box-shadow .15s ease; font-family:'Hind Siliguri',sans-serif; }
+    .controls input:focus,.controls select:focus { outline:none; box-shadow:0 0 0 3px rgba(226,135,47,.3); }
+    .student-entry-panel,.storage-panel,.password-panel,.teacher-panel,.teacher-entry-panel,.generator-panel { background:rgba(255,255,255,.05); padding:14px; border-radius:10px; margin-top:12px; border:1px solid rgba(255,255,255,.08); }
+    
+    .generator-panel { background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.3); }
+    .generator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; align-items: flex-end; }
+    
+    .btn { background:linear-gradient(135deg,var(--emerald),var(--emerald-dark)); color:white; border:none; padding:7px 14px; border-radius:7px; cursor:pointer; font-weight:700; font-size:12.5px; transition:.12s; }
+    .btn:hover { transform:translateY(-1px); box-shadow:0 5px 14px rgba(0,0,0,.25); }
+    .btn-edit { background:linear-gradient(135deg,#f4a93b,var(--amber-dark)); } .btn-danger { background:linear-gradient(135deg,#ec6b60,var(--ruby-dark)); }
+    .btn-word { background:linear-gradient(135deg,#2b579a,#1e395b); color:white; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px; transition:.15s; margin-top:10px; width:100%; display:flex; justify-content:center; align-items:center; gap:6px; }
+    .btn-word:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(43,87,154,.4); }
+    .btn-print { background:linear-gradient(135deg,#3690c9,#215f8c); color:white; border:none; width:100%; font-size:15px; padding:13px; border-radius:99px; cursor:pointer; font-weight:700; margin-top:12px; box-shadow:0 8px 20px rgba(33,95,140,.3); transition:.15s; letter-spacing:.2px; }
+    .btn-print:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(33,95,140,.4); }
+    .class-storage-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; margin-top:10px; }
+    .storage-card { background:rgba(0,0,0,.22); padding:10px 12px; border-radius:10px; font-size:11px; border:1px solid rgba(255,255,255,.06); }
+    .storage-card h4 { margin:0 0 6px; color:var(--amber); border-bottom:1px solid rgba(255,255,255,.15); padding-bottom:4px; font-family:'Hind Siliguri',sans-serif; }
+    .storage-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,.06); padding:5px 8px; margin-bottom:5px; border-radius:6px; }
+    
+    .paper { background:var(--paper); margin:0 auto; padding:4mm 6mm; box-sizing:border-box; box-shadow:0 6px 24px rgba(10,16,24,.15); position:relative; border-top:3px solid var(--gold-line); }
+    .paper.portrait { width:210mm; min-height:295mm; padding:3mm 6mm; } 
+    .paper.landscape { width:297mm; min-height:205mm; }
+    .school-title { text-align: center; font-size: 19px; font-weight: 700; margin: 0; line-height: 1.2; color:var(--navy-900); letter-spacing:.2px; }
+    .exam-title { text-align: center; font-size: 12px; margin-bottom: 4px; font-weight: 600; color:var(--navy-700); }
+    .meta-info { display:flex; justify-content:space-between; font-size:10.5px; margin-bottom:5px; font-weight:600; }
+    .tabulation-header { justify-content:center!important; gap:16px; }
+    .dotted-line { border-bottom:1px dotted #000; display:inline-block; min-width:35px; padding:0 2px; text-align:center; }
+    .double-column-wrapper { display:flex; gap:7px; width:100%; } .column-half { flex:1; width:50%; }
+    .tabulation-table { width:100%; border-collapse:collapse; margin-top:2px; }
+    .tabulation-table th,.tabulation-table td { border:1px solid #35404a; text-align:center; box-sizing:border-box; }
+    .tabulation-table tbody tr:nth-child(even) { background:#f7f8f5; }
+    .paper.portrait .tabulation-table { font-size:8.5px; }
+    .paper.portrait .tabulation-table th { padding:2px; background:#eef1e9; font-weight:700; color:var(--navy-900); }
+    .paper.portrait .tabulation-table td { height:15.5px; padding:0 1px; }
+    .paper.landscape .tabulation-table { font-size:9px; }
+    .paper.landscape .tabulation-table th { font-size:8px; padding:2px 1px; background:#eef1e9; font-weight:700; color:var(--navy-900); }
+    .paper.landscape .tabulation-table td { height:18px; padding:0 1px; }
+    .name-col { text-align:left!important; padding-left:3px!important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .action-btn-cell { display:flex; gap:1px; justify-content:center; }
+    .footer-stats { margin-top:5px; font-size:9.5px; font-weight:600; color:var(--navy-800); } .footer-row { display:flex; justify-content:space-between; margin-bottom:2px; }
+    .signature-section { display:flex; justify-content:space-between; margin-top:12px; font-size:10px; font-weight:bold; }
+    .signature-box { border-top:1px dashed #000; padding-top:2px; width:28%; text-align:center; position: relative; }
+    
+    .head-sig-img {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 35px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    
+    /* Admit Card Layout */
+    .admit-page { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      grid-template-rows: 1fr 1fr; 
+      gap: 4mm; 
+      page-break-after: always; 
+      height: 198mm; 
+      box-sizing: border-box; 
+      padding: 1.5mm; 
+    }
+    .admit-card { 
+      border: 1.8px solid #1a1a1a; 
+      border-radius: 14px; 
+      padding: 6px 12px 4px; 
+      background: #ffffff; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+      box-sizing: border-box; 
+      height: 100%; 
+      position: relative; 
+      overflow: hidden; 
+    }
+    .admit-watermark { 
+      position: absolute; 
+      top: 55%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      width: 145px; 
+      height: 145px; 
+      object-fit: contain;
+      opacity: 0.12; 
+      pointer-events: none; 
+      z-index: 0; 
+    }
+    .admit-top {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .admit-top-logo {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .admit-top-info {
+      flex: 1;
+      text-align: center;
+      padding-right: 54px;
+    }
+    .admit-top-info h2 {
+      margin: 0;
+      font-size: 19px;
+      font-weight: 800;
+      color: #000;
+      line-height: 1.15;
+      letter-spacing: 0.2px;
+    }
+    .admit-top-info p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: #111;
+      font-weight: 600;
+    }
+    .admit-exam-bar {
+      text-align: center;
+      margin: 4px 0 2px;
+      position: relative;
+      z-index: 1;
+    }
+    .admit-exam-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #000;
+    }
+    .admit-pill-badge {
+      display: inline-block;
+      background: #000;
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 1.5px 22px;
+      border-radius: 999px;
+      margin-top: 2px;
+      letter-spacing: 0.3px;
+    }
+    .admit-body-grid {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .admit-info-col {
+      flex: 1.35;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #000;
+    }
+    .admit-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 3.5px;
+    }
+    .admit-lbl {
+      width: 62px;
+      flex-shrink: 0;
+      font-size: 13.5px;
+      letter-spacing: 0.2px;
+    }
+    .admit-col-colon {
+      margin: 0 4px;
+      font-size: 13.5px;
+    }
+    .admit-val {
+      flex: 1;
+      border-bottom: 1.5px dotted #000;
+      padding-left: 6px;
+      min-height: 18px;
+      font-size: 14px;
+      font-weight: 800;
+      outline: none;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .admit-val:focus {
+      background-color: #fcf8e3;
+    }
+    .admit-rules-col {
+      flex: 1;
+      border-left: 2px solid #000;
+      padding-left: 8px;
+      font-size: 9.5px;
+      line-height: 1.3;
+      font-weight: 600;
+      color: #000;
+    }
+    .admit-rules-title {
+      font-weight: 800;
+      text-decoration: underline;
+      margin-bottom: 3px;
+      font-size: 10.5px;
+    }
+    .admit-rules-col ol {
+      margin: 0;
+      padding-left: 14px;
+    }
+    .admit-sign-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 10.5px;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+      padding: 0 12px;
+    }
+    .admit-sign-box {
+      border-top: 1.2px solid #000;
+      padding-top: 2px;
+      text-align: center;
+      width: 36%;
+      position: relative;
+    }
+    .admit-sign-box .head-sig-img {
+      height: 32px;
+      bottom: 12px;
+    }
+    .admit-credit-tag {
+      text-align: center;
+      font-size: 8px;
+      color: #444;
+      margin-top: 2px;
+      font-family: sans-serif;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 1 Page = 12 Seat Cards (Exact 1:1 Image Ratio & Match) */
+    .seat-page {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 3mm;
+      page-break-after: always;
+      height: 198mm;
+      box-sizing: border-box;
+      padding: 1.5mm;
+    }
+    .seat-card {
+      border: 1.6px dashed #000;
+      border-radius: 12px;
+      padding: 5px 8px 3px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-sizing: border-box;
+      height: 100%;
+      overflow: hidden;
+    }
+    .seat-watermark {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Top Row: Left Logo & Completely Centered School Name */
+    .seat-card-top {
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 24px;
+    }
+    .seat-card-logo {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+    .seat-card-school-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #000;
+      margin: 0;
+      line-height: 1.15;
+      text-align: center;
+      width: 100%;
+      padding: 0 24px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.1px;
+    }
+    .seat-card-exam {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #000;
+      margin: 1.5px 0 2px;
+      position: relative;
+      z-index: 1;
+      line-height: 1.1;
+    }
+    .seat-card-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+      flex: 1;
+    }
+    .seat-card-info-col {
+      flex: 1.35;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5px;
+    }
+    .seat-row {
+      display: flex;
+      align-items: baseline;
+    }
+    .seat-lbl {
+      width: 28px;
+      flex-shrink: 0;
+      font-size: 9.5px;
+    }
+    .seat-colon {
+      margin: 0 3px;
+      font-size: 9.5px;
+    }
+    .seat-val {
+      flex: 1;
+      border-bottom: 1px dotted #000;
+      padding-left: 3px;
+      min-height: 13px;
+      font-size: 10px;
+      font-weight: 800;
+      outline: none;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    /* Exact Sized Dashed Roll Box */
+    .seat-card-roll-box {
+      width: 78px;
+      height: 48px;
+      border: 1.5px dashed #000;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+    .seat-card-roll-lbl {
+      font-size: 9px;
+      font-weight: 800;
+      color: #000;
+      margin-bottom: 0;
+      line-height: 1;
+    }
+    .seat-card-roll-num {
+      font-size: 20px;
+      font-weight: 900;
+      color: #000;
+      line-height: 1.1;
+      outline: none;
+      margin-top: 1px;
+    }
+    .seat-card-sign-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2px;
+      font-size: 8px;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+      padding: 0 4px;
+    }
+    .seat-card-sign-box {
+      border-top: 1px solid #000;
+      padding-top: 1px;
+      text-align: center;
+      width: 40%;
+      line-height: 1;
+      position: relative;
+    }
+    .seat-card-sign-box .head-sig-img {
+      height: 20px;
+      bottom: 8px;
+    }
+    .seat-card-credit {
+      text-align: center;
+      font-size: 6.5px;
+      color: #444;
+      margin-top: 0.5px;
+      font-family: sans-serif;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+      line-height: 1;
+    }
+
+    .template-view { display:none; } 
+    .template-view.active { display:block !important; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 5px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; color: #333; font-size: 12px; margin-bottom: 8px; }
+    
+    .teacher-assign-row { background: rgba(255,255,255,0.08); padding: 8px; border-radius: 6px; margin-bottom: 8px; }
+    .teacher-assign-row label { font-size: 12px; font-weight: bold; color: var(--amber); display: block; margin-bottom: 4px; }
+
+    .teacher-entry-table { width:100%; border-collapse:collapse; margin-top:10px; background:#fff; color:#000; border-radius:8px; overflow:hidden; }
+    .teacher-entry-table th { background:var(--navy-800); color:#fff; padding:8px; font-size:13px; border:1px solid #444; }
+    .teacher-entry-table td { padding:6px; text-align:center; border:1px solid #ccc; font-size:13px; }
+    .teacher-entry-table input { width:65px; text-align:center; padding:5px; border:1px solid #aaa; border-radius:4px; font-weight:bold; }
+    
+    .teacher-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; margin-top: 8px; }
+    .teacher-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 6px; }
+
+    @media print {
+      body { background:none; padding:0; } #startPage,#loginOverlay,.controls { display:none!important; }
+      .action-col { display:none!important; } #appContent { display:block!important; padding:0!important; }
+      .paper { box-shadow:none; margin:0; padding:0mm!important; width:100%!important; border-top:none; }
+      .admit-page { height:198mm!important; margin:0!important; padding:0!important; page-break-after:always; }
+      .seat-page { height:198mm!important; margin:0!important; padding:0!important; page-break-after:always; }
+      .admit-card, .seat-card { background:#fff; }
+      .admit-val:focus, .seat-val:focus, .seat-card-roll-num:focus { background-color: transparent !important; }
+    }
+  </style>
+</head>
+<body>
+<div id="startPage">
+  <div class="top-corner-menu">
+    <button class="menu-btn" onclick="toggleDropdown()">⚙️ অপশন ▾</button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href="javascript:void(0)" onclick="goToLogin()">📄 স্কুল নম্বর শিট</a>
+      <label for="bgImageInput">📷 ব্যাকগ্রাউন্ড ছবি পরিবর্তন করুন</label>
+      <input type="file" id="bgImageInput" accept="image/*" style="display:none;" onchange="changeStartPageBg(event)">
+    </div>
+  </div>
+  <img src="https://i.ibb.co.com/wN2RzpPb/IMG-3229.jpg" alt="School Logo" class="start-logo">
+  <h1 class="start-title">দলইনগর উচ্চ বিদ্যালয়</h1>
+  <p class="creator-credit">Developed by Mahid khan</p>
+  <p class="start-subtitle">গহিরা, রাউজান, চট্টগ্রাম | অটোমেটেড সফটওয়্যার পোর্টাল</p>
+  <button class="enter-btn" onclick="goToLogin()">স্কুল নম্বর শিট ➔</button>
+</div>
+
+<div id="loginOverlay">
+  <div class="login-box">
+    <button onclick="goToStartPage()" style="position:absolute; top:10px; right:10px; width:auto; padding:2px 8px; background:#7f8c8d; font-size:11px; border:none; color:white; border-radius:3px; cursor:pointer;">✕ হোম</button>
+    <h2>দলইনগর উচ্চ বিদ্যালয়</h2>
+    <p style="font-size:12px;color:#666;margin-bottom:15px;">সফটওয়্যাারে প্রবেশ করতে লগইন করুন</p>
+    <select id="loginRole" onchange="toggleLoginRole()">
+      <option value="admin">এডমিন (Admin)</option>
+      <option value="teacher">বিষয় শিক্ষক (Teacher)</option>
+    </select>
+    <input type="text" id="loginUser" placeholder="ইউজারনেম (Username)">
+    <input type="password" id="loginPass" placeholder="পাসওয়ার্ড (Password)">
+    <button onclick="checkLogin()">লগইন করুন</button>
+    <div id="loginMsg" style="color:red;font-size:12px;margin-top:8px;"></div>
+  </div>
+</div>
+
+<div id="appContent">
+<div class="controls">
+  <div class="header-bar">
+    <h3 style="margin:0;color:#f39c12;" id="portalTitle">দলইনগর উচ্চ বিদ্যালয় - এডমিন প্যানেল</h3>
+    <div>
+      <button class="btn" style="background:#34495e;" onclick="goToStartPage()">🏠 হোম পেজ</button>
+      <button class="btn btn-edit admin-only" onclick="toggleTeacherPanel()">👨‍🏫 শিক্ষক ইউজার প্যানেল</button>
+      <button class="btn btn-edit admin-only" onclick="togglePassPanel()">🔑 পাসওয়ার্ড পরিবর্তন</button>
+      <button class="btn btn-danger" onclick="logout()">🚪 লগআউট</button>
+    </div>
+  </div>
+
+  <div class="teacher-panel admin-only" id="teacherPanel" style="display:none;margin-bottom:15px;">
+    <div style="font-size:13px;font-weight:bold;color:#2ecc71;margin-bottom:8px;" id="teacherFormHeader">👨‍🏫 নতুন শিক্ষক অ্যাকাউন্ট তৈরি ও বিষয়ে অ্যাসাইন করুন:</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+      <input type="text" id="tUsername" placeholder="শিক্ষকের ইউজারনেম" style="flex:1;">
+      <input type="password" id="tPassword" placeholder="পাসওয়ার্ড" style="flex:1;">
+    </div>
+    
+    <div style="font-size:11.5px; font-weight:bold; color:#f39c12; margin-bottom:6px;">প্রতিটি শ্রেণির জন্য বিষয়সমূহ সিলেক্ট করুন:</div>
+
+    <div id="classAssignContainer"></div>
+
+    <div style="display:flex; gap:10px; margin-top:8px;">
+      <button class="btn" id="btnSaveTeacher" style="background:#27ae60; flex:1; padding:10px;" onclick="createOrUpdateTeacherAccount()">শিক্ষক অ্যাকাউন্ট সেভ করুন</button>
+      <button class="btn" id="btnCancelEditTeacher" style="background:#7f8c8d; display:none;" onclick="resetTeacherForm()">বাতিল</button>
+    </div>
+
+    <hr style="border:0.5px solid rgba(255,255,255,0.1); margin:15px 0;">
+    <div id="teacherListDisplay"></div>
+  </div>
+
+  <div class="password-panel admin-only" id="passPanel" style="display:none;margin-bottom:15px;">
+    <div style="font-size:12px;font-weight:bold;color:#f1c40f;margin-bottom:6px;">🔑 এডমিন ইউজারনেম ও পাসওয়ার্ড আপডেট করুন:</div>
+    <div class="controls-grid" style="grid-template-columns:1fr 1fr auto;">
+      <input type="text" id="newAdminUser" placeholder="নতুন ইউজারনেম"><input type="password" id="newAdminPass" placeholder="নতুন পাসওয়ার্ড">
+      <button class="btn" style="background:#2980b9;" onclick="updateAdminCredentials()">সেভ করুন</button>
+    </div>
+  </div>
+
+  <div id="teacherSelectBar" style="display:none; background:rgba(241,196,15,0.15); padding:10px; border-radius:8px; margin-bottom:12px; border:1px solid #f1c40f;">
+    <span style="font-size:13px; font-weight:bold; color:#f39c12; margin-right:10px;">🎯 আপনার জন্য নির্ধারিত বিষয়ের তালিকা:</span>
+    <select id="teacherAssignedList" onchange="onTeacherOptionChange()" style="padding:6px 12px; border-radius:6px; font-weight:bold; font-size:13px;">
+    </select>
+  </div>
+
+  <!-- Primary Controls Grid -->
+  <div class="controls-grid admin-only">
+    <select id="inClass" onchange="onClassChange();"><option value="৬ষ্ঠ">শ্রেণি: ৬ষ্ঠ</option><option value="৭ম">শ্রেণি: ৭ম</option><option value="৮ম">শ্রেণি: ৮ম</option><option value="৯ম" selected>শ্রেণি: ১ম</option><option value="১০ম">শ্রেণি: ১০ম</option></select>
+    <select id="inGroup" onchange="updateHeader();renderTables();"><option value="বিজ্ঞান" selected>বিজ্ঞান</option><option value="মানবিক">মানবিক</option><option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option></select>
+    <select id="inSection" onchange="updateHeader();loadMasterStudentData();"><option value="ক" selected> শাখা: ক</option><option value="খ">শাখা: খ</option></select>
+    <select id="inSubject" onchange="updateHeader();loadMasterStudentData();">
+    </select>
+    <input type="text" id="inMarks" value="১০০" placeholder="পূর্ণমান" oninput="updateHeader()">
+    <input type="text" id="inExam" value="অর্ধ-বার্ষিক পরীক্ষা - ২০২৬ ইংরেজি" placeholder="পরীক্ষার নাম" oninput="updateHeader()">
+  </div>
+
+  <!-- Generator Panel for Admit Card & Seat Card by Roll Range -->
+  <div class="generator-panel admin-only">
+    <div style="font-size:13.5px; font-weight:bold; color:#2ecc71; margin-bottom:8px;">
+      🎟️ রোল রেঞ্জ অনুযায়ী এডমিট ও সিট কার্ড স্বয়ংক্রিয় জেনারেটর (Database + Manual Blank)
+    </div>
+    <div class="generator-grid">
+      <div>
+        <label style="font-size:11px; display:block; margin-bottom:3px;">শ্রেণি:</label>
+        <select id="genClass" style="width:100%;">
+          <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম" selected>৯ম</option><option value="১০ম">১০ম</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px; display:block; margin-bottom:3px;">শাখা:</label>
+        <select id="genSection" style="width:100%;">
+          <option value="ক" selected>ক শাখা</option><option value="খ">খ শাখা</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px; display:block; margin-bottom:3px;">শুরুর রোল (From):</label>
+        <input type="number" id="genRollStart" value="1" placeholder="যেমন: 1" style="width:100%;">
+      </div>
+      <div>
+        <label style="font-size:11px; display:block; margin-bottom:3px;">শেষ রোল (To):</label>
+        <input type="number" id="genRollEnd" value="30" placeholder="যেমন: 30" style="width:100%;">
+      </div>
+      <div>
+        <button class="btn" style="background:#27ae60; width:100%; padding:9px 10px;" onclick="generateAdmitCardsByRange()">
+          ⚡ জেনারেট করুন
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher-entry-panel" id="teacherEntryPanel" style="display:none;">
+    <div style="font-size:14px; font-weight:bold; color:#f1c40f; margin-bottom:10px;" id="teacherPanelTitle">
+      📝 বিষয় নম্বর ইনপুট ফরম
+    </div>
+    <div style="max-height:400px; overflow-y:auto;">
+      <table class="teacher-entry-table">
+        <thead id="teacherTableHeader">
+          <tr>
+            <th style="width:10%;">রোল</th>
+            <th style="width:35%;">শিক্ষার্থীর নাম</th>
+            <th style="width:15%;">নৈর্ব্যক্তিক (MCQ)</th>
+            <th style="width:15%;">রচনামূলক (CQ)</th>
+            <th style="width:15%;">ব্যবহারিক (Prac)</th>
+            <th style="width:10%;">মোট</th>
+          </tr>
+        </thead>
+        <tbody id="teacherTableBody">
+        </tbody>
+      </table>
+    </div>
+    <button class="btn" style="background:#27ae60; width:100%; margin-top:12px; padding:10px; font-size:14px;" onclick="saveTeacherMarks()">💾 নম্বরসমূহ সেভ করুন</button>
+  </div>
+
+  <div class="student-entry-panel admin-only">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div><label style="font-size:12px;font-weight:bold;">📁 Excel / CSV ফাইল লোড করুন:</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv" onchange="loadExcelData(event)" style="background:white;color:black;font-size:11px;"></div>
+      <div>
+        <button class="btn" style="background:#e67e22;" onclick="saveToStorage()">💾 শ্রেণি ডাটা সেভ করুন</button>
+      </div>
+    </div>
+    <hr style="border:0.5px solid #555;margin:8px 0;">
+    <div style="font-size:12px;font-weight:bold;margin-bottom:4px;" id="formTitle">✍️ ইনপুট ও এন্ট্রি ফরম (এডমিন প্যানেল):</div>
+    <div class="controls-grid" style="grid-template-columns:70px 1fr 90px 90px 45px 45px 45px auto;">
+      <input type="text" id="stuRoll" placeholder="রোল">
+      <input type="text" id="stuName" placeholder="শিক্ষার্থীর নাম">
+      <select id="stuGroup"><option value="বিজ্ঞান">বিজ্ঞান</option><option value="মানবিক">মানবিক</option><option value="ব্যবসায় শিক্ষা">ব্যবসায় শিক্ষা</option></select>
+      <select id="stuReligion">
+        <option value="Islam" selected>ইসলাম</option>
+        <option value="Hinduism">হিন্দু ধর্ম</option>
+      </select>
+      <input type="text" id="stuCq" placeholder="রচনা">
+      <input type="text" id="stuMcq" placeholder="নৈর্ব্যক্তিক">
+      <input type="text" id="stuPrac" placeholder="ব্যবহারিক">
+      <button class="btn" id="btnSaveStudent" onclick="addOrUpdateStudent()">সেভ করুন</button>
+    </div>
+  </div>
+
+  <div class="tab-buttons admin-only" style="margin-top:15px;">
+    <button class="tab-btn active" id="tabBtn_general" onclick="switchTemplate('general')">
+      <span>সাধারণ নম্বর ফর্দ</span>
+      <select onchange="selectClassFromTab(this.value, 'general')" onclick="event.stopPropagation()">
+        <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+        <option value="৭ম">৭ম</option>
+        <option value="৮ম">৮ম</option>
+        <option value="৯ম" selected>৯ম</option>
+        <option value="১০ম">১০ম</option>
+      </select>
+    </button>
+    <button class="tab-btn" id="tabBtn_bangla-english" onclick="switchTemplate('bangla-english')">
+      <span>বাংলা ও ইংরেজি নম্বর ফর্দ</span>
+      <select onchange="selectClassFromTab(this.value, 'bangla-english')" onclick="event.stopPropagation()">
+        <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+        <option value="৭ম">৭ম</option>
+        <option value="৮ম">৮ম</option>
+        <option value="৯ম" selected>৯ম</option>
+        <option value="১০ম">১০ম</option>
+      </select>
+    </button>
+    <button class="tab-btn" id="tabBtn_tabulation-68" onclick="switchTemplate('tabulation-68')">
+      <span>৬ষ্ঠ-৮ম ট্যাবুলিশন</span>
+      <select onchange="selectClassFromTab(this.value, 'tabulation-68')" onclick="event.stopPropagation()">
+        <option value="৬ষ্ঠ">শ্রেণি: ৬ষ্ঠ</option>
+        <option value="৭ম">শ্রেণি: ৭ম</option>
+        <option value="৮ম">শ্রেণি: ৮ম</option>
+      </select>
+    </button>
+    <button class="tab-btn" id="tabBtn_tabulation-910" onclick="switchTemplate('tabulation-910')">
+      <span>৯ম-১০ম ট্যাবুলিশন</span>
+      <select onchange="selectClassFromTab(this.value, 'tabulation-910')" onclick="event.stopPropagation()">
+        <option value="৯ম" selected>শ্রেণি: ১ম</option>
+        <option value="১০ম">শ্রেণি: ১০ম</option>
+      </select>
+    </button>
+    <button class="tab-btn" id="tabBtn_admit-card" style="background:#8e44ad;" onclick="switchTemplate('admit-card')">
+      <span>🎟️ এডমিট কার্ড</span>
+      <small style="font-size:10px; opacity:0.8;">(অটো + ম্যানুয়াল এন্ট্রি)</small>
+    </button>
+    <button class="tab-btn" id="tabBtn_seat-card" style="background:#2c3e50;" onclick="switchTemplate('seat-card')">
+      <span>🪑 সিট কার্ড</span>
+      <small style="font-size:10px; opacity:0.8;">(১ পেজে ১২টি)</small>
+    </button>
+  </div>
+
+  <div class="storage-panel admin-only"><div style="font-size:13px;font-weight:bold;color:#f39c12;">📂 সেভ করা শ্রেণির তালিকা (Class Storage)</div><div class="class-storage-grid" id="storageContainer"></div></div>
+  <button class="btn-word" onclick="exportToWordDoc()">📝 বর্তমান নম্বর ফর্দ Word (.docx) ফরম্যাটে এক্সপোর্ট করুন</button>
+  <button class="btn-print" onclick="printPage()">A4 পেজে প্রিন্ট / PDF সেভ করুন</button>
+</div>
+
+<div class="paper portrait" id="mainPaper">
+  <div id="standardHeader">
+    <div style="text-align:center; margin-bottom:2px;">
+      <img src="https://i.ibb.co.com/wN2RzpPb/IMG-3229.jpg" style="width:40px; height:40px; object-fit:contain; vertical-align:middle; margin-right:8px;">
+      <span class="school-title" style="display:inline-block; vertical-align:middle;">দলইনগর উচ্চ বিদ্যালয়</span>
+    </div>
+    <div class="exam-title"><span id="outExam">অর্ধ-বার্ষিক পরীক্ষা - ২০২৬ ইংরেজি</span></div>
+    <div class="meta-info" id="numberSheetMeta"><div>শ্রেণি- <span id="outClass" class="dotted-line">৯ম</span> <span id="outGroupWrapper">গ্রুপ- <span id="outGroup" class="dotted-line">বিজ্ঞান</span></span> শাখা- <span id="outSection" class="dotted-line">ক</span> বিষয়:- <span id="outSubject" class="dotted-line">বাংলা ১ম</span></div><div>পূর্ণমান :- <span id="outMarks" class="dotted-line">১০০</span></div><div>তারিখ:- <span class="dotted-line" style="min-width:40px;"></span></div></div>
+    <div class="meta-info tabulation-header" id="tabulationMeta" style="display:none;"><div>শ্রেণি- <span id="tabClass" class="dotted-line">৯ম</span></div><div> শাখা- <span id="tabSection" class="dotted-line">ক</span></div></div>
+  </div>
+  
+  <div id="generalView" class="template-view active"><div class="double-column-wrapper">
+    <div class="column-half"><table class="tabulation-table"><thead><tr><th style="width:10%;">রোল</th><th style="width:36%;">শিক্ষার্থীর নাম</th><th style="width:11%;">নৈব.</th><th style="width:11%;">রচ.</th><th style="width:10%;">ব্যব.</th><th style="width:11%;">মোট</th><th style="width:11%;">GPA</th><th class="action-col" style="width:5%;">এ.</th></tr></thead><tbody id="generalTableBody1"></tbody></table></div>
+    <div class="column-half"><table class="tabulation-table"><thead><tr><th style="width:10%;">রোল</th><th style="width:36%;">শিক্ষার্থীর নাম</th><th style="width:11%;">নৈব.</th><th style="width:11%;">রচ.</th><th style="width:10%;">ব্যব.</th><th style="width:11%;">মোট</th><th style="width:11%;">GPA</th><th class="action-col" style="width:5%;">এ.</th></tr></thead><tbody id="generalTableBody2"></tbody></table></div>
+  </div></div>
+
+  <div id="banglaEnglishView" class="template-view"><div class="double-column-wrapper">
+    <div class="column-half"><table class="tabulation-table"><thead><tr><th rowspan="2" style="width:9%;">রোল</th><th rowspan="2" style="width:28%;">শিক্ষার্থীর নাম</th><th colspan="2">১ম পত্র</th><th colspan="2">২য় পত্র</th><th rowspan="2" style="width:10%;">মোট</th><th rowspan="2" style="width:10%;">GPA</th><th class="action-col" rowspan="2" style="width:5%;">এ.</th></tr><tr><th style="width:9%;">রচ</th><th style="width:9%;">নৈ</th><th style="width:9%;">রচ</th><th style="width:9%;">নৈ</th></tr></thead><tbody id="beTableBody1"></tbody></table></div>
+    <div class="column-half"><table class="tabulation-table"><thead><tr><th rowspan="2" style="width:9%;">রোল</th><th rowspan="2" style="width:28%;">শিক্ষার্থীর নাম</th><th colspan="2">১ম পত্র</th><th colspan="2">২য় পত্র</th><th rowspan="2" style="width:10%;">মোট</th><th rowspan="2" style="width:10%;">GPA</th><th class="action-col" rowspan="2" style="width:5%;">এ.</th></tr><tr><th style="width:9%;">রচ</th><th style="width:9%;">নৈ</th><th style="width:9%;">রচ</th><th style="width:9%;">নৈ</th></tr></thead><tbody id="beTableBody2"></tbody></table></div>
+  </div></div>
+
+  <div id="tabulation68View" class="template-view"><table class="tabulation-table"><thead><tr><th style="width:4%;">রোল</th><th style="width:18%;">শিক্ষার্থীর নাম</th><th style="width:5%;">বাংলা ১ম</th><th style="width:5%;">বাংলা ২য়</th><th style="width:5%;">মোট</th><th style="width:5%;">ইংরেজি ১ম</th><th style="width:5%;">ইংরেজি ২য়</th><th style="width:5%;">মোট</th><th style="width:6%;">গণিত</th><th style="width:6%;">বিজ্ঞান</th><th style="width:8%;">বিজিএস</th><th style="width:6%;">ধর্ম/হিন্দু ধর্ম</th><th style="width:8%;">আইসিটি</th><th style="width:6%;">সর্বমোট</th><th style="width:8%;">মন্তব্য</th></tr></thead><tbody id="tab68TableBody"></tbody></table></div>
+
+  <div id="tabulation910View" class="template-view"><table class="tabulation-table"><thead><tr id="tab910HeaderRow"><th style="width:3.5%;">রোল</th><th style="width:15%;">শিক্ষার্থীর নাম</th><th style="width:4.5%;">বাংলা ১ম</th><th style="width:4.5%;">বাংলা ২য়</th><th style="width:4.5%;">মোট</th><th style="width:4.5%;">ইংরেজি ১ম</th><th style="width:4.5%;">ইংরেজি ২য়</th><th style="width:4.5%;">মোট</th><th style="width:5%;">গণিত</th><th style="width:5%;">বিজ্ঞান</th><th style="width:7.5%;" id="sub1">গ্রুপ বিষয় ১</th><th style="width:7.5%;" id="sub2">গ্রুপ বিষয় ২</th><th style="width:7.5%;" id="sub3">গ্রুপ বিষয় ৩</th><th style="width:7.5%;">বাংলাদেশ ও বিশ্বপরিচয়</th><th style="width:6.5%;">উচ্চতর গণিত / কৃষি</th><th style="width:5.5%;">আইসিটি</th><th style="width:5%;">সর্বমোট</th><th style="width:5.5%;">মন্তব্য</th></tr></thead><tbody id="tab910TableBody"></tbody></table></div>
+
+  <div id="admitCardView" class="template-view"><div id="admitPagesContainer"></div></div>
+
+  <div id="seatCardView" class="template-view"><div id="seatPagesContainer"></div></div>
+
+  <div id="footerSection">
+    <div class="footer-stats" id="footerStats">
+      <div class="footer-row">
+        <div>মোট - ....................জন,</div>
+        <div>পাশ- ....................জন,</div>
+        <div>ফেল- ....................জন,</div>
+      </div>
+    </div>
+    <div class="signature-section">
+      <div class="signature-box" id="sig1">বিষয় শিক্ষকের স্বাক্ষর</div>
+      <div class="signature-box">শ্রেণি শিক্ষকের স্বাক্ষর</div>
+      <div class="signature-box">
+        <img src="https://i.ibb.co.com/n86y997Z/IMG-20250528-WA0000.jpg" class="head-sig-img" alt="Headmaster Signature">
+        প্রধান শিক্ষকের স্বাক্ষর
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<script>
+const schoolLogoBase64="https://i.ibb.co.com/wN2RzpPb/IMG-3229.jpg";
+const headmasterSignUrl="https://i.ibb.co.com/n86y997Z/IMG-20250528-WA0000.jpg";
+const availableClasses = ['৬ষ্ঠ', '৭ম', '৮ম', '৯ম', '১০ম'];
+
+const baseSubjects = ['বাংলা ১ম', 'বাংলা ২য়', 'ইংরেজি ১ম', 'ইংরেজি ২য়', 'গণিত', 'বিজ্ঞান', 'বিজিএস', 'ইসলাম ধর্ম', 'হিন্দু ধর্ম', 'আইসিটি'];
+const upperSubjects = ['পদার্থবিজ্ঞান', 'রসায়ন', 'জীববিজ্ঞান', 'বাংলাদেশের ইতিহাস', 'ভূগোল ও পরিবেশ', 'পৌরনীতি ও নাগরিকতা', 'হিসাববিজ্ঞান', 'ব্যবসায় উদ্যোগ', 'ফিন্যান্স ও ব্যাংকিং'];
+
+function getSubjectsForClass(c){
+  if(c === '৯ম' || c === '১০ম') {
+    return [...baseSubjects, ...upperSubjects];
+  }
+  return baseSubjects;
+}
+
+let currentMode='general',studentData={},editingRoll=null;
+let isLoggedIn = false;
+let currentUserRole = 'admin';
+let loggedInTeacherData = null;
+let editingTeacherIndex = null;
+
+function toggleDropdown(){document.getElementById("myDropdown").classList.toggle("show-dropdown")}
+window.onclick=function(event){if(!event.target.matches('.menu-btn')){const dropdowns=document.getElementsByClassName("dropdown-content");for(let i=0;i<dropdowns.length;i++){let openDropdown=dropdowns[i];if(openDropdown.classList.contains('show-dropdown'))openDropdown.classList.remove('show-dropdown')}}}
+function changeStartPageBg(event){const file=event.target.files[0];if(file){const reader=new FileReader();reader.onload=function(e){const startPage=document.getElementById('startPage');startPage.style.background=`linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('${e.target.result}') no-repeat center center/cover`};reader.readAsDataURL(file)}}
+function goToStartPage(){document.getElementById('startPage').style.display='flex';document.getElementById('loginOverlay').style.display='none';document.getElementById('appContent').style.display='none'}
+function goToLogin(){document.getElementById('startPage').style.display='none';if(isLoggedIn){document.getElementById('appContent').style.display='block'}else{document.getElementById('loginOverlay').style.display='flex'}}
+
+async function getStoredCredentials(){
+  try {
+    let c = await window.dbGet('appCredentials');
+    return c || {user:'Admin', pass:'Admin'};
+  } catch(e) {
+    return {user:'Admin', pass:'Admin'};
+  }
+}
+
+function toggleLoginRole(){
+  const role = document.getElementById('loginRole').value;
+  if(role==='teacher'){
+    document.getElementById('loginUser').placeholder = "শিক্ষক ইউজারনেম";
+  } else {
+    document.getElementById('loginUser').placeholder = "ইউজারনেম (Username)";
+  }
+}
+
+function buildAdminClassAssignUI(){
+  const container = document.getElementById('classAssignContainer');
+  if(!container) return;
+  container.innerHTML = '';
+  
+  availableClasses.forEach(c => {
+    let row = document.createElement('div');
+    row.className = 'teacher-assign-row';
+    let subs = getSubjectsForClass(c);
+    let html = `<label>শ্রেণি: ${c}</label><div class="checkbox-grid">`;
+    subs.forEach(sub => {
+      html += `<label><input type="checkbox" name="tSub_${c}" value="${sub}"> ${sub}</label>`;
+    });
+    html += `</div>`;
+    row.innerHTML = html;
+    container.appendChild(row);
+  });
+}
+
+function updateSubjectDropdown(){
+  const cls = document.getElementById('inClass').value;
+  const subSelect = document.getElementById('inSubject');
+  const subs = getSubjectsForClass(cls);
+  
+  const currentVal = subSelect.value;
+  subSelect.innerHTML = '';
+  subs.forEach(s => {
+    let opt = document.createElement('option');
+    opt.value = s;
+    opt.innerText = s;
+    subSelect.appendChild(opt);
+  });
+  if(subs.includes(currentVal)){
+    subSelect.value = currentVal;
+  }
+}
+
+function onClassChange(){
+  toggleGroupVisibility();
+  updateSubjectDropdown();
+  updateHeader();
+  loadMasterStudentData();
+}
+
+function selectClassFromTab(selectedClass, targetMode){
+  const inClassSelect = document.getElementById('inClass');
+  if(inClassSelect) {
+    inClassSelect.value = selectedClass;
+    onClassChange();
+  }
+  switchTemplate(targetMode);
+}
+
+async function checkLogin(){
+  const role = document.getElementById('loginRole').value;
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  
+  if(role==='admin'){
+    const c = await getStoredCredentials();
+    if(u===c.user && p===c.pass){
+      isLoggedIn = true;
+      currentUserRole = 'admin';
+      setupUserInterface();
+      document.getElementById('loginOverlay').style.display='none';
+      document.getElementById('appContent').style.display='block';
+      document.getElementById('loginMsg').innerText='';
+    } else {
+      document.getElementById('loginMsg').innerText='ভুল এডমিন ইউজারনেম অথবা পাসওয়ার্ড!';
+    }
+  } else {
+    const teachers = (await window.dbGet('appTeachers')) || [];
+    const teacher = teachers.find(t => t.username === u && t.password === p);
+    if(teacher){
+      isLoggedIn = true;
+      currentUserRole = 'teacher';
+      loggedInTeacherData = teacher;
+      setupUserInterface();
+      document.getElementById('loginOverlay').style.display='none';
+      document.getElementById('appContent').style.display='block';
+      document.getElementById('loginMsg').innerText='';
+    } else {
+      document.getElementById('loginMsg').innerText='শিক্ষকের ইউজারনেম বা পাসওয়ার্ড সঠিক নয়!';
+    }
+  }
+}
+
+function setupUserInterface(){
+  const adminElements = document.querySelectorAll('.admin-only');
+  const teacherBar = document.getElementById('teacherSelectBar');
+  const teacherEntryPanel = document.getElementById('teacherEntryPanel');
+  
+  if(currentUserRole==='teacher'){
+    adminElements.forEach(el => el.style.display='none');
+    teacherBar.style.display = 'block';
+    teacherEntryPanel.style.display = 'block';
+    document.getElementById('portalTitle').innerText = `দলইনগর উচ্চ বিদ্যালয় - শিক্ষক প্যানেল (${loggedInTeacherData.username})`;
+    
+    const select = document.getElementById('teacherAssignedList');
+    select.innerHTML = '';
+    
+    let assignments = loggedInTeacherData.assignments || [];
+    assignments.forEach((a, idx) => {
+      let opt = document.createElement('option');
+      opt.value = idx;
+      opt.innerText = `শ্রেণি: ${a.className} — বিষয়: ${a.subject}`;
+      select.appendChild(opt);
+    });
+
+    if(assignments.length > 0) {
+      onTeacherOptionChange();
+    }
+  } else {
+    adminElements.forEach(el => el.style.display='');
+    teacherBar.style.display = 'none';
+    teacherEntryPanel.style.display = 'none';
+    document.getElementById('portalTitle').innerText = "দলইনগর উচ্চ বিদ্যালয় - এডমিন প্যানেল";
+    onClassChange();
+  }
+  renderTeacherList();
+}
+
+function onTeacherOptionChange(){
+  const idx = document.getElementById('teacherAssignedList').value;
+  let assignments = loggedInTeacherData.assignments || [];
+  
+  const selected = assignments[idx];
+  if(selected) {
+    document.getElementById('inClass').value = selected.className;
+    updateSubjectDropdown();
+    document.getElementById('inSubject').value = selected.subject;
+    toggleGroupVisibility();
+    updateHeader();
+    loadMasterStudentData();
+    renderTeacherEntryTable();
+  }
+}
+
+async function loadMasterStudentData(){
+  const cls = document.getElementById('inClass').value;
+  const sec = document.getElementById('inSection').value;
+  const sub = document.getElementById('inSubject').value;
+  
+  const key = `SchoolData_${cls}_${sec}_${sub}`;
+  const masterKey = `MasterClass_${cls}_${sec}`;
+  
+  try {
+    let saved = await window.dbGet(`schoolData/${key}`);
+    if(saved && saved.students){
+      studentData = saved.students;
+    } else {
+      let master = await window.dbGet(`masterClass/${masterKey}`);
+      if(master && Array.isArray(master)){
+        studentData = {};
+        master.forEach(s => {
+          studentData[s.rollDisplay] = { rollDisplay: s.rollDisplay, name: s.name, group: s.group||'বিজ্ঞান', religion: s.religion||'Islam', cq:'', mcq:'', prac:'', total:'' };
+        });
+      } else {
+        studentData = {};
+      }
+    }
+  } catch(err) {
+    studentData = {};
+  }
+  await renderTables();
+  if(currentUserRole === 'teacher') renderTeacherEntryTable();
+}
+
+function renderTeacherEntryTable(){
+  const tbody = document.getElementById('teacherTableBody');
+  const cls = document.getElementById('inClass').value;
+  const sub = document.getElementById('inSubject').value;
+  document.getElementById('teacherPanelTitle').innerText = `📝 বিষয় নম্বর এন্ট্রি ফরম [শ্রেণি: ${cls} | বিষয়: ${sub}]`;
+
+  tbody.innerHTML = '';
+  
+  let keys = Object.keys(studentData).sort((a,b)=>(parseInt(banglaToEnglishNum(a))||0)-(parseInt(banglaToEnglishNum(b))||0));
+  
+  if(sub === 'হিন্দু ধর্ম') {
+    keys = keys.filter(r => studentData[r].religion === 'Hinduism');
+  } else if(sub === 'ইসলাম ধর্ম') {
+    keys = keys.filter(r => studentData[r].religion === 'Islam' || !studentData[r].religion);
+  }
+
+  if(keys.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6" style="color:red; font-weight:bold; padding:15px;">এই শ্রেণিতে নির্দিষ্ট ধর্ম/বিষয়ের কোনো শিক্ষার্থী তথ্য সেভ করা নেই!</td></tr>`;
+    return;
+  }
+
+  keys.forEach(r => {
+    let s = studentData[r];
+    let tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><b>${s.rollDisplay}</b></td>
+      <td style="text-align:left;"><b>${s.name}</b></td>
+      <td><input type="number" id="tMcq_${r}" value="${s.mcq||''}" oninput="calcTeacherTotal('${r}')"></td>
+      <td><input type="number" id="tCq_${r}" value="${s.cq||''}" oninput="calcTeacherTotal('${r}')"></td>
+      <td><input type="number" id="tPrac_${r}" value="${s.prac||''}" oninput="calcTeacherTotal('${r}')"></td>
+      <td><span id="tTotal_${r}" style="font-weight:bold; color:green;">${s.total||'0'}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function calcTeacherTotal(r){
+  let mcq = parseFloat(document.getElementById(`tMcq_${r}`).value) || 0;
+  let cq = parseFloat(document.getElementById(`tCq_${r}`).value) || 0;
+  let prac = parseFloat(document.getElementById(`tPrac_${r}`).value) || 0;
+  let tot = mcq + cq + prac;
+  document.getElementById(`tTotal_${r}`).innerText = tot > 0 ? tot : 0;
+}
+
+async function saveTeacherMarks(){
+  let keys = Object.keys(studentData);
+  const sub = document.getElementById('inSubject').value;
+
+  if(sub === 'হিন্দু ধর্ম') {
+    keys = keys.filter(r => studentData[r].religion === 'Hinduism');
+  } else if(sub === 'ইসলাম ধর্ম') {
+    keys = keys.filter(r => studentData[r].religion === 'Islam' || !studentData[r].religion);
+  }
+
+  keys.forEach(r => {
+    let mcqVal = document.getElementById(`tMcq_${r}`) ? document.getElementById(`tMcq_${r}`).value : '';
+    let cqVal = document.getElementById(`tCq_${r}`) ? document.getElementById(`tCq_${r}`).value : '';
+    let pracVal = document.getElementById(`tPrac_${r}`) ? document.getElementById(`tPrac_${r}`).value : '';
+    let mcq = parseFloat(mcqVal) || 0;
+    let cq = parseFloat(cqVal) || 0;
+    let prac = parseFloat(pracVal) || 0;
+    
+    studentData[r].mcq = mcqVal;
+    studentData[r].cq = cqVal;
+    studentData[r].prac = pracVal;
+    studentData[r].total = (mcq + cq + prac) > 0 ? (mcq + cq + prac).toString() : '';
+  });
+
+  await saveToStorage();
+  await renderTables();
+  alert('সকল নম্বর সফলভাবে অনলাইন ডাটাবেজে সংরক্ষণ করা হয়েছে!');
+}
+
+function logout(){isLoggedIn=false;document.getElementById('appContent').style.display='none';goToStartPage();document.getElementById('loginUser').value='';document.getElementById('loginPass').value=''}
+function togglePassPanel(){const p=document.getElementById('passPanel');p.style.display=p.style.display==='none'?'block':'none'}
+function toggleTeacherPanel(){const p=document.getElementById('teacherPanel');p.style.display=p.style.display==='none'?'block':'none'}
+
+async function createOrUpdateTeacherAccount(){
+  const u = document.getElementById('tUsername').value.trim(), p = document.getElementById('tPassword').value.trim();
+  if(!u || !p){alert('ইউজারনেম ও পাসওয়ার্ড দুটিই পূরণ করুন!'); return;}
+
+  let assignments = [];
+  availableClasses.forEach(c => {
+    const selectedSubs = Array.from(document.querySelectorAll(`input[name="tSub_${c}"]:checked`)).map(cb => cb.value);
+    selectedSubs.forEach(sub => {
+      assignments.push({ className: c, subject: sub });
+    });
+  });
+
+  if(assignments.length === 0){alert('কমপক্ষে যেকোনো শ্রেণির একটি বিষয় নির্বাচন করুন!'); return;}
+
+  let teachers = (await window.dbGet('appTeachers')) || [];
+  
+  if(editingTeacherIndex !== null) {
+    teachers[editingTeacherIndex] = { username: u, password: p, assignments: assignments };
+    alert(`শিক্ষক ${u} এর তথ্য সফলভাবে আপডেট হয়েছে!`);
+  } else {
+    teachers.push({ username: u, password: p, assignments: assignments });
+    alert(`শিক্ষক ${u} সফলভাবে তৈরি হয়েছে!`);
+  }
+
+  await window.dbSave('appTeachers', teachers);
+  resetTeacherForm();
+  renderTeacherList();
+}
+
+function resetTeacherForm(){
+  editingTeacherIndex = null;
+  document.getElementById('tUsername').value = ''; 
+  document.getElementById('tPassword').value = '';
+  document.querySelectorAll('#classAssignContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.getElementById('teacherFormHeader').innerText = "👨‍🏫 নতুন শিক্ষক অ্যাকাউন্ট তৈরি ও বিষয়ে অ্যাসাইন করুন:";
+  document.getElementById('btnSaveTeacher').innerText = "শিক্ষক অ্যাকাউন্ট সেভ করুন";
+  document.getElementById('btnSaveTeacher').style.background = "#27ae60";
+  document.getElementById('btnCancelEditTeacher').style.display = "none";
+}
+
+async function editTeacher(index){
+  let teachers = (await window.dbGet('appTeachers')) || [];
+  let teacher = teachers[index];
+  if(!teacher) return;
+
+  editingTeacherIndex = index;
+  document.getElementById('tUsername').value = teacher.username;
+  document.getElementById('tPassword').value = teacher.password;
+  
+  document.querySelectorAll('#classAssignContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+  
+  if(teacher.assignments){
+    teacher.assignments.forEach(a => {
+      let cb = document.querySelector(`input[name="tSub_${a.className}"][value="${a.subject}"]`);
+      if(cb) cb.checked = true;
+    });
+  }
+
+  document.getElementById('teacherFormHeader').innerText = `✏️ শিক্ষক "${teacher.username}" এর তথ্য সংশোধন করুন:`;
+  document.getElementById('btnSaveTeacher').innerText = "আপডেট করুন";
+  document.getElementById('btnSaveTeacher').style.background = "#f39c12";
+  document.getElementById('btnCancelEditTeacher').style.display = "inline-block";
+  
+  window.scrollTo({ top: document.getElementById('teacherPanel').offsetTop - 20, behavior: 'smooth' });
+}
+
+async function renderTeacherList(){
+  const container = document.getElementById('teacherListDisplay');
+  if(!container) return;
+  let teachers = (await window.dbGet('appTeachers')) || [];
+  if(!teachers.length){ container.innerHTML = '<div style="color:#aaa; font-style:italic;">কোনো বিষয় শিক্ষক যুক্ত করা হয়নি।</div>'; return; }
+  
+  let html = '<div style="font-size:13px; font-weight:bold; color:#f1c40f; margin-bottom:8px;">📋 নিবন্ধিত বিষয় শিক্ষকবৃন্দের তালিকা (আইডি, পাসওয়ার্ড ও বিষয়):</div>';
+  
+  teachers.forEach((t, i) => {
+    let assignText = '';
+    if(t.assignments && t.assignments.length > 0) {
+      assignText = t.assignments.map(a => `<span style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px; margin:2px; display:inline-block;">${a.className}: ${a.subject}</span>`).join(' ');
+    } else {
+      assignText = '<i style="color:#aaa;">কোনো বিষয় যুক্ত করা হয়নি</i>';
+    }
+
+    html += `
+      <div class="teacher-card">
+        <div class="teacher-card-header">
+          <div>
+            <span style="font-size:13px; font-weight:bold; color:#2ecc71;">👤 ${t.username}</span> 
+            <span style="margin-left:10px; font-size:12px; color:#f39c12;">🔑 পাসওয়ার্ড: 
+              <input type="password" value="${t.password}" readonly id="passShow_${i}" style="background:none; border:none; color:#f39c12; width:80px; font-weight:bold; font-size:12px;">
+              <button onclick="togglePassView(${i})" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:11px;">👁️ দেখান</button>
+            </span>
+          </div>
+          <div>
+            <button class="btn btn-edit" style="padding:2px 8px; font-size:11px;" onclick="editTeacher(${i})">✏️ এডিট</button>
+            <button class="btn btn-danger" style="padding:2px 8px; font-size:11px;" onclick="deleteTeacher(${i})">🗑️ মুছুন</button>
+          </div>
+        </div>
+        <div style="font-size:11px; color:#ddd;">
+          <b>নির্ধারিত বিষয়সমূহ:</b> ${assignText}
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function togglePassView(index){
+  let input = document.getElementById(`passShow_${index}`);
+  if(input.type === 'password'){
+    input.type = 'text';
+  } else {
+    input.type = 'password';
+  }
+}
+
+async function deleteTeacher(index){
+  if(confirm('আপনি কি নিশ্চিত যে এই শিক্ষক অ্যাকাউন্টটি মুছে ফেলতে চান?')){
+    let teachers = (await window.dbGet('appTeachers')) || [];
+    teachers.splice(index, 1);
+    await window.dbSave('appTeachers', teachers);
+    renderTeacherList();
+  }
+}
+
+async function updateAdminCredentials(){
+  const u=document.getElementById('newAdminUser').value.trim(),p=document.getElementById('newAdminPass').value.trim();
+  if(!u||!p){alert('ইউজারনেম এবং পাসওয়ার্ড উভয় ঘর পূরণ করুন!');return}
+  await window.dbSave('appCredentials', {user:u, pass:p});
+  alert('পাসওয়ার্ড সফলভাবে অনলাইন ডাটাবেজে পরিবর্তন করা হয়েছে!');
+  document.getElementById('newAdminUser').value='';document.getElementById('newAdminPass').value='';togglePassPanel();
+}
+
+function banglaToEnglishNum(s){if(!s)return'';const b=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];let r=s.toString();b.forEach((d,i)=>r=r.replace(new RegExp(d,'g'),i));return r}
+function englishToBanglaNum(s){if(s===undefined||s===null||s==='')return'';const b=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];let r=s.toString();for(let i=0;i<10;i++){r=r.replace(new RegExp(i,'g'),b[i]);}return r}
+function toggleGroupVisibility(){const c=document.getElementById('inClass').value,g=document.getElementById('inGroup'),w=document.getElementById('outGroupWrapper');if(c==='৯ম'||c==='১০ম'){g.style.display='inline-block';w.style.display='inline-block'}else{g.style.display='none';w.style.display='none'}}
+
+async function getMergedTabulationData(){
+  const cls = document.getElementById('inClass').value;
+  const sec = document.getElementById('inSection').value;
+  const masterKey = `MasterClass_${cls}_${sec}`;
+  
+  let mergedMap = {};
+  try {
+    let master = await window.dbGet(`masterClass/${masterKey}`);
+    if(master && Array.isArray(master)){
+      master.forEach(s => {
+        mergedMap[s.rollDisplay] = { rollDisplay: s.rollDisplay, name: s.name, group: s.group||'বিজ্ঞান', religion: s.religion||'Islam' };
+      });
+    }
+
+    const subMapping = {
+      'বাংলা ১ম': 'b1', 'বাংলা ২য়': 'b2', 'ইংরেজি ১ম': 'e1', 'ইংরেজি ২য়': 'e2',
+      'গণিত': 'math', 'বিজ্ঞান': 'sci', 'বিজিএস': 'bgs', 'ইসলাম ধর্ম': 'rel',
+      'হিন্দু ধর্ম': 'hinduRel', 'আইসিটি': 'ict',
+      'পদার্থবিজ্ঞান': 'sci_g1', 'রসায়ন': 'sci_g2', 'জীববিজ্ঞান': 'sci_g3',
+      'বাংলাদেশের ইতিহাস': 'arts_g1', 'ভূগোল ও পরিবেশ': 'arts_g2', 'পৌরনীতি ও নাগরিকতা': 'arts_g3',
+      'হিসাববিজ্ঞান': 'com_g1', 'ব্যবসায় উদ্যোগ': 'com_g2', 'ফিন্যান্স ও ব্যাংকিং': 'com_g3'
+    };
+
+    const allPossibleSubs = getSubjectsForClass(cls);
+
+    for (let sub of allPossibleSubs) {
+      let key = `SchoolData_${cls}_${sec}_${sub}`;
+      let saved = await window.dbGet(`schoolData/${key}`);
+      if(saved && saved.students){
+        let dataObj = saved.students || {};
+        let field = subMapping[sub];
+        Object.keys(dataObj).forEach(r => {
+          if(!mergedMap[r]){
+            mergedMap[r] = { rollDisplay: dataObj[r].rollDisplay, name: dataObj[r].name, group: dataObj[r].group, religion: dataObj[r].religion };
+          }
+          if(field){
+            mergedMap[r][field] = dataObj[r].total || '';
+          }
+        });
+      }
+    }
+  } catch(e) {
+    console.error(e);
+  }
+
+  return mergedMap;
+}
+
+async function renderTables(){
+ const sg=document.getElementById('inGroup').value,sc=document.getElementById('inClass').value,nineTen=sc==='৯ম'||sc==='১০ম',curSub=document.getElementById('inSubject').value;let list=[];
+ if(sg==='মানবিক'){document.getElementById('sub1').innerText='বাংলাদেশের ইতিহাস';document.getElementById('sub2').innerText='ভূগোল ও পরিবেশ';document.getElementById('sub3').innerText='পৌরনীতি ও নাগরিকতা'}
+ else if(sg==='ব্যবসায় শিক্ষা'){document.getElementById('sub1').innerText='হিসাববিজ্ঞান';document.getElementById('sub2').innerText='ব্যবসায় উদ্যোগ';document.getElementById('sub3').innerText='ফিন্যান্স ও ব্যাংকিং'}
+ else{document.getElementById('sub1').innerText='পদার্থবিজ্ঞান';document.getElementById('sub2').innerText='রসায়ন';document.getElementById('sub3').innerText='জীববিজ্ঞান'}
+ 
+ Object.keys(studentData).forEach(r=>{
+   const s=studentData[r];
+   let religionMatch = true;
+   if(curSub === 'হিন্দু ধর্ম') {
+     religionMatch = (s.religion === 'Hinduism');
+   } else if(curSub === 'ইসলাম ধর্ম') {
+     religionMatch = (s.religion === 'Islam' || !s.religion);
+   }
+   
+   if((!nineTen||sg==='সকল'||s.group===sg) && religionMatch) {
+     list.push({rollKey:r,...s});
+   }
+ });
+ 
+ list.sort((a,b)=>(parseInt(banglaToEnglishNum(a.rollDisplay))||0)-(parseInt(banglaToEnglishNum(b.rollDisplay))||0));
+ const b1=document.getElementById('generalTableBody1'),b2=document.getElementById('generalTableBody2'),be1=document.getElementById('beTableBody1'),be2=document.getElementById('beTableBody2'),t68=document.getElementById('tab68TableBody'),t910=document.getElementById('tab910TableBody');
+ if(b1) b1.innerHTML='';
+ if(b2) b2.innerHTML='';
+ if(be1) be1.innerHTML='';
+ if(be2) be2.innerHTML='';
+ if(t68) t68.innerHTML='';
+ if(t910) t910.innerHTML='';
+
+ for(let i=0;i<60;i++){
+  const s=list[i]||{},r=s.rollDisplay||'',a=(s.rollKey && currentUserRole==='admin')?`<div class="action-btn-cell"><button class="btn btn-edit" style="padding:0 2px;font-size:8px;" onclick="editStudent('${s.rollKey}')">✏️</button></div>`:'';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${r}</td><td class="name-col">${s.name||''}</td><td>${s.mcq||''}</td><td>${s.cq||''}</td><td>${s.prac||''}</td><td>${s.total||''}</td><td>${s.gpa||''}</td><td class="action-col">${a}</td>`;
+  if(b1 && b2) (i<30?b1:b2).appendChild(tr);
+
+  const tr2=tr.cloneNode(false);
+  tr2.innerHTML=`<td>${r}</td><td class="name-col">${s.name||''}</td><td>${s.b1cq||''}</td><td>${s.b1mcq||''}</td><td>${s.b2cq||''}</td><td>${s.b2mcq||''}</td><td>${s.grandTotal||''}</td><td>${s.beGpa||''}</td><td class="action-col">${a}</td>`;
+  if(be1 && be2) (i<30?be1:be2).appendChild(tr2);
+ }
+
+ let tabDataMap = await getMergedTabulationData();
+ let tabList = Object.keys(tabDataMap).map(r => tabDataMap[r]);
+ tabList.sort((a,b)=>(parseInt(banglaToEnglishNum(a.rollDisplay))||0)-(parseInt(banglaToEnglishNum(b.rollDisplay))||0));
+
+ for(let i=0;i<20;i++){
+  const s=tabList[i]||{},r=s.rollDisplay||(i+1<10?'০'+(i+1):(i+1));
+  let b1Val=parseFloat(banglaToEnglishNum(s.b1))||0;
+  let b2Val=parseFloat(banglaToEnglishNum(s.b2))||0;
+  let bTot = (b1Val||b2Val) ? (b1Val+b2Val) : '';
+  let e1Val=parseFloat(banglaToEnglishNum(s.e1))||0;
+  let e2Val=parseFloat(banglaToEnglishNum(s.e2))||0;
+  let eTot = (e1Val||e2Val) ? (e1Val+e2Val) : '';
+  let m=parseFloat(banglaToEnglishNum(s.math))||0;
+  let sc=parseFloat(banglaToEnglishNum(s.sci))||0;
+  let bgs=parseFloat(banglaToEnglishNum(s.bgs))||0;
+  let rel=parseFloat(banglaToEnglishNum(s.rel||s.hinduRel))||0;
+  let ict=parseFloat(banglaToEnglishNum(s.ict))||0;
+
+  let grandTot68 = (bTot ? parseFloat(bTot) : 0) + (eTot ? parseFloat(eTot) : 0) + m + sc + bgs + rel + ict;
+
+  let x=document.createElement('tr');
+  x.innerHTML=`<td>${r}</td><td class="name-col">${s.name||''}</td><td>${s.b1||''}</td><td>${s.b2||''}</td><td>${bTot||''}</td><td>${s.e1||''}</td><td>${s.e2||''}</td><td>${eTot||''}</td><td>${s.math||''}</td><td>${s.sci||''}</td><td>${s.bgs||''}</td><td>${s.rel||s.hinduRel||''}</td><td>${s.ict||''}</td><td>${grandTot68||''}</td><td>${s.remark||''}</td>`;
+  if(t68) t68.appendChild(x);
+
+  let g1Val='', g2Val='', g3Val='';
+  let stGroup = s.group || sg; 
+
+  if(stGroup === 'মানবিক'){
+    g1Val = s.arts_g1 || ''; g2Val = s.arts_g2 || ''; g3Val = s.arts_g3 || '';
+  } else if(stGroup === 'ব্যবসায় শিক্ষা'){
+    g1Val = s.com_g1 || ''; g2Val = s.com_g2 || ''; g3Val = s.com_g3 || '';
+  } else {
+    g1Val = s.sci_g1 || ''; g2Val = s.sci_g2 || ''; g3Val = s.sci_g3 || '';
+  }
+
+  let g1=parseFloat(banglaToEnglishNum(g1Val))||0;
+  let g2=parseFloat(banglaToEnglishNum(g2Val))||0;
+  let g3=parseFloat(banglaToEnglishNum(g3Val))||0;
+  let grandTot910 = (bTot ? parseFloat(bTot) : 0) + (eTot ? parseFloat(eTot) : 0) + m + sc + g1 + g2 + g3 + bgs + ict;
+
+  let y=x.cloneNode(false);
+  y.innerHTML=`<td>${r}</td><td class="name-col">${s.name||''}</td><td>${s.b1||''}</td><td>${s.b2||''}</td><td>${bTot||''}</td><td>${s.e1||''}</td><td>${s.e2||''}</td><td>${eTot||''}</td><td>${s.math||''}</td><td>${s.sci||''}</td><td>${g1Val}</td><td>${g2Val}</td><td>${g3Val}</td><td>${s.bgs||''}</td><td>${s.optSub||''}</td><td>${s.ict||''}</td><td>${grandTot910||''}</td><td>${s.remark||''}</td>`;
+  if(t910) t910.appendChild(y);
+ }
+}
+
+// Generate Admit and Seat Cards by Class, Section, and Roll Range
+async function generateAdmitCardsByRange(){
+  const cls = document.getElementById('genClass').value;
+  const sec = document.getElementById('genSection').value;
+  const startRoll = parseInt(document.getElementById('genRollStart').value) || 1;
+  const endRoll = parseInt(document.getElementById('genRollEnd').value) || 30;
+
+  if(startRoll > endRoll){
+    alert('শুরুর রোল অবশ্যই শেষ রোলের চেয়ে ছোট বা সমান হতে হবে!');
+    return;
+  }
+
+  const masterKey = `MasterClass_${cls}_${sec}`;
+  let masterData = (await window.dbGet(`masterClass/${masterKey}`)) || [];
+  let studentMap = {};
+
+  if(Array.isArray(masterData)){
+    masterData.forEach(s => {
+      let rNum = parseInt(banglaToEnglishNum(s.rollDisplay));
+      if(rNum) studentMap[rNum] = s;
+    });
+  }
+
+  let finalList = [];
+  for(let r = startRoll; r <= endRoll; r++){
+    let rFormatted = r < 10 ? '০' + r : r.toString();
+    if(studentMap[r]){
+      finalList.push({
+        rollDisplay: studentMap[r].rollDisplay || rFormatted,
+        name: studentMap[r].name || '',
+        group: studentMap[r].group || 'সাধারণ',
+        customClass: cls,
+        customSection: sec
+      });
+    } else {
+      finalList.push({
+        rollDisplay: rFormatted,
+        name: '',
+        group: 'সাধারণ',
+        customClass: cls,
+        customSection: sec
+      });
+    }
+  }
+
+  renderAdmitCards(finalList, cls, sec);
+  renderSeatCards(finalList, cls, sec);
+  
+  if(currentMode !== 'admit-card' && currentMode !== 'seat-card'){
+    switchTemplate('admit-card');
+  }
+  
+  alert(`শ্রেণি: ${cls}, শাখা: ${sec} এর মোট (${finalList.length}) টি এডমিট ও সিট কার্ড প্রস্তুত করা হয়েছে!`);
+}
+
+function renderAdmitCards(students, overrideClass = null, overrideSec = null){
+  const c = document.getElementById('admitPagesContainer');
+  if(!c) return;
+  c.innerHTML = '';
+  
+  let studentList = students && students.length > 0 ? students : [{}, {}, {}, {}];
+  const examName = document.getElementById('inExam').value || 'অর্ধ-বার্ষিক পরীক্ষা - ২০২৬ ইংরেজি';
+
+  for(let i = 0; i < studentList.length; i += 4){
+    const pg = document.createElement('div');
+    pg.className = 'admit-page';
+    studentList.slice(i, i + 4).forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'admit-card';
+      
+      const stClass = s.customClass || overrideClass || document.getElementById('inClass').value || '';
+      const stSec = s.customSection || overrideSec || document.getElementById('inSection').value || '';
+      const stName = s.name || '';
+      const stRoll = englishToBanglaNum(s.rollDisplay || '');
+
+      card.innerHTML = `
+        <img src="${schoolLogoBase64}" class="admit-watermark" alt="Watermark">
+        
+        <div class="admit-top">
+          <img src="${schoolLogoBase64}" class="admit-top-logo" alt="Logo">
+          <div class="admit-top-info">
+            <h2 contenteditable="true" spellcheck="false">দলইনগর উচ্চ বিদ্যালয়</h2>
+            <p contenteditable="true" spellcheck="false">গহিরা, রাউজান, চট্টগ্রাম</p>
+            <p style="font-size:9.5px; margin-top:0;" contenteditable="true" spellcheck="false">EIIN: ১০৪৪০২</p>
+          </div>
+        </div>
+
+        <div class="admit-exam-bar">
+          <div class="admit-exam-name" contenteditable="true" spellcheck="false">${examName}</div>
+          <div><span class="admit-pill-badge">প্রবেশপত্র</span></div>
+        </div>
+
+        <div class="admit-body-grid">
+          <div class="admit-info-col">
+            <div class="admit-row">
+              <span class="admit-lbl">নাম</span>
+              <span class="admit-col-colon">:</span>
+              <span class="admit-val" contenteditable="true" spellcheck="false">${stName}</span>
+            </div>
+            <div class="admit-row">
+              <span class="admit-lbl">শ্রেণী</span>
+              <span class="admit-col-colon">:</span>
+              <span class="admit-val" contenteditable="true" spellcheck="false">${stClass} ${stClass.includes('শ্রেণী') || stClass.includes('শ্রেণি') ? '' : 'শ্রেণী'}</span>
+            </div>
+            <div class="admit-row">
+              <span class="admit-lbl">রোল নং</span>
+              <span class="admit-col-colon">:</span>
+              <span class="admit-val" contenteditable="true" spellcheck="false">${stRoll}</span>
+            </div>
+            <div class="admit-row">
+              <span class="admit-lbl">শাখা</span>
+              <span class="admit-col-colon">:</span>
+              <span class="admit-val" contenteditable="true" spellcheck="false">${stSec}</span>
+            </div>
+            <div class="admit-row">
+              <span class="admit-lbl">শিক্ষাবর্ষ</span>
+              <span class="admit-col-colon">:</span>
+              <span class="admit-val" contenteditable="true" spellcheck="false">২০২৬</span>
+            </div>
+          </div>
+
+          <div class="admit-rules-col">
+            <div class="admit-rules-title">নির্দেশনাবলী:</div>
+            <ol contenteditable="true" spellcheck="false">
+              <li>পরীক্ষার ৩০ মিনিট পূর্বে উপস্থিত হতে হবে।</li>
+              <li>অবশ্যই প্রবেশপত্র সঙ্গে আনতে হবে।</li>
+              <li>পরীক্ষার হলে কোনো প্রকার অসদুপায় অবলম্বন নিষিদ্ধ।</li>
+              <li>Authorities decision will be final.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div>
+          <div class="admit-sign-row">
+            <div class="admit-sign-box">শ্রেণী শিক্ষক</div>
+            <div class="admit-sign-box">
+              <img src="${headmasterSignUrl}" class="head-sig-img" alt="Headmaster Signature">
+              প্রধান শিক্ষক
+            </div>
+          </div>
+          <div class="admit-credit-tag">Developed by Mahid khan</div>
+        </div>
+      `;
+      pg.appendChild(card);
+    });
+    c.appendChild(pg);
+  }
+}
+
+// Render Exactly 12 Seat Cards per page (Exact 1:1 Image Ratio & Match)
+function renderSeatCards(students, overrideClass = null, overrideSec = null){
+  const c = document.getElementById('seatPagesContainer');
+  if(!c) return;
+  c.innerHTML = '';
+  
+  let studentList = students && students.length > 0 ? students : [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+  const examName = document.getElementById('inExam').value || 'অর্ধ-বার্ষিক পরীক্ষা - ২০২৬ ইংরেজি';
+
+  for(let i = 0; i < studentList.length; i += 12){
+    const pg = document.createElement('div');
+    pg.className = 'seat-page';
+    studentList.slice(i, i + 12).forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'seat-card';
+      
+      const stClass = s.customClass || overrideClass || document.getElementById('inClass').value || '';
+      const stSec = s.customSection || overrideSec || document.getElementById('inSection').value || '';
+      const stName = s.name || '';
+      const stRoll = englishToBanglaNum(s.rollDisplay || '');
+
+      card.innerHTML = `
+        <img src="${schoolLogoBase64}" class="seat-watermark" alt="Watermark">
+        
+        <div class="seat-card-top">
+          <img src="${schoolLogoBase64}" class="seat-card-logo" alt="Logo">
+          <div class="seat-card-school-title" contenteditable="true" spellcheck="false">দলইনগর উচ্চ বিদ্যালয়</div>
+        </div>
+
+        <div class="seat-card-exam" contenteditable="true" spellcheck="false">${examName}</div>
+
+        <div class="seat-card-body">
+          <div class="seat-card-info-col">
+            <div class="seat-row">
+              <span class="seat-lbl">নাম</span>
+              <span class="seat-colon">:</span>
+              <span class="seat-val" contenteditable="true" spellcheck="false">${stName}</span>
+            </div>
+            <div class="seat-row">
+              <span class="seat-lbl">শ্রেণী</span>
+              <span class="seat-colon">:</span>
+              <span class="seat-val" contenteditable="true" spellcheck="false">${stClass}</span>
+            </div>
+            <div class="seat-row">
+              <span class="seat-lbl">শাখা</span>
+              <span class="seat-colon">:</span>
+              <span class="seat-val" contenteditable="true" spellcheck="false">${stSec}</span>
+            </div>
+          </div>
+
+          <div class="seat-card-roll-box">
+            <div class="seat-card-roll-lbl">রোল নং</div>
+            <div class="seat-card-roll-num" contenteditable="true" spellcheck="false">${stRoll}</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="seat-card-sign-row">
+            <div class="seat-card-sign-box">শ্রেণী শিক্ষক</div>
+            <div class="seat-card-sign-box">
+              <img src="${headmasterSignUrl}" class="head-sig-img" alt="Headmaster Signature">
+              প্রধান শিক্ষক
+            </div>
+          </div>
+          <div class="seat-card-credit">Developed by Mahid khan</div>
+        </div>
+      `;
+      pg.appendChild(card);
+    });
+    c.appendChild(pg);
+  }
+}
+
+async function addOrUpdateStudent(){
+  const stuRoll = document.getElementById('stuRoll');
+  const stuName = document.getElementById('stuName');
+  const stuReligion = document.getElementById('stuReligion');
+  const stuCq = document.getElementById('stuCq');
+  const stuMcq = document.getElementById('stuMcq');
+  const stuPrac = document.getElementById('stuPrac');
+  const stuGroup = document.getElementById('stuGroup');
+
+  const raw=stuRoll.value.trim(),name=stuName.value.trim(),religion=stuReligion.value;
+  if(!raw||!name){alert('দয়া করে রোল এবং শিক্ষার্থীর নাম প্রদান করুন');return}
+  const key=editingRoll||raw,cq=stuCq.value,mcq=stuMcq.value,prac=stuPrac.value;
+  let tot = (parseFloat(banglaToEnglishNum(cq))||0)+(parseFloat(banglaToEnglishNum(mcq))||0)+(parseFloat(banglaToEnglishNum(prac))||0)||'';
+  
+  let currentSub = document.getElementById('inSubject').value;
+  let subMapping = {
+    'বাংলা ১ম': 'b1', 'বাংলা ২য়': 'b2', 'ইংরেজি ১ম': 'e1', 'ইংরেজি ২য়': 'e2',
+    'গণিত': 'math', 'বিজ্ঞান': 'sci', 'বিজিএস': 'bgs', 'ইসলাম ধর্ম': 'rel',
+    'হিন্দু ধর্ম': 'hinduRel', 'আইসিটি': 'ict'
+  };
+
+  let fieldKey = subMapping[currentSub] || 'customSub';
+
+  studentData[key] = {
+    ...(studentData[key]||{}),
+    rollDisplay:raw,
+    name,
+    group:stuGroup.value,
+    religion:religion,
+    cq, mcq, prac,
+    total: tot,
+    [fieldKey]: tot
+  };
+
+  await saveMasterStudentList();
+  await saveToStorage();
+  await renderTables();
+  resetForm();
+  alert('শিক্ষার্থীর তথ্য অনলাইন ডাটাবেজে আপডেট করা হয়েছে!');
+}
+
+async function saveMasterStudentList(){
+  const cls = document.getElementById('inClass').value;
+  const sec = document.getElementById('inSection').value;
+  const masterKey = `MasterClass_${cls}_${sec}`;
+  
+  let masterArray = [];
+  Object.keys(studentData).forEach(r => {
+    masterArray.push({
+      rollDisplay: studentData[r].rollDisplay,
+      name: studentData[r].name,
+      group: studentData[r].group,
+      religion: studentData[r].religion
+    });
+  });
+  await window.dbSave(`masterClass/${masterKey}`, masterArray);
+}
+
+function editStudent(k){
+  const s=studentData[k];if(!s)return;
+  document.getElementById('stuRoll').value=s.rollDisplay||k;
+  document.getElementById('stuName').value=s.name||'';
+  document.getElementById('stuGroup').value=s.group||'বিজ্ঞান';
+  document.getElementById('stuReligion').value=s.religion||'Islam';
+  document.getElementById('stuCq').value=s.cq||'';
+  document.getElementById('stuMcq').value=s.mcq||'';
+  document.getElementById('stuPrac').value=s.prac||'';
+  editingRoll=k;
+  document.getElementById('formTitle').innerText=`✏️ রোল ${s.rollDisplay} এর তথ্য সংশোধন করুন:`;
+  const btn = document.getElementById('btnSaveStudent');
+  btn.innerText='আপডেট করুন';
+  btn.style.background='#f39c12';
+}
+
+function resetForm(){
+  editingRoll=null;
+  document.getElementById('stuRoll').value=document.getElementById('stuName').value=document.getElementById('stuCq').value=document.getElementById('stuMcq').value=document.getElementById('stuPrac').value='';
+  document.getElementById('stuReligion').value='Islam';
+  document.getElementById('formTitle').innerText='✍️ ইনপুট ও এন্ট্রি ফরম:';
+  const btn = document.getElementById('btnSaveStudent');
+  btn.innerText='সেভ করুন';
+  btn.style.background='#27ae60';
+}
+
+function loadExcelData(e){
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=async x=>{
+    const wb=XLSX.read(new Uint8Array(x.target.result),{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws);
+    studentData={};
+    rows.forEach(row=>{
+      const r=row.Roll??row['রোল'];
+      if(r!==undefined&&r!==null){
+        const rs=r.toString().trim();
+        const relVal = row.Religion||row['ধর্ম'];
+        let parsedRel = 'Islam';
+        if(relVal && (relVal.toString().toLowerCase().includes('hindu') || relVal.toString().includes('হিন্দু'))){
+          parsedRel = 'Hinduism';
+        }
+        studentData[rs]={
+          rollDisplay:rs,
+          name:row.Name||row['নাম']||'',
+          group:row.Group||row['গ্রুপ']||'বিজ্ঞান',
+          religion:parsedRel,
+          cq:row.CQ||row['রচনা']||'',
+          mcq:row.MCQ||row['নৈর্ব্যক্তিক']||'',
+          prac:row.Practical||row['ব্যবহারিক']||'',
+          total:row.Total||row['মোট']||'',
+          gpa:row.GPA||row['জিডিএ']||''
+        }
+      }
+    });
+    await saveMasterStudentList();
+    await saveToStorage();
+    await renderTables();
+    alert('এক্সেল ডাটা লোড ও সেভ হয়েছে!');
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+async function saveToStorage(){
+  const inClass = document.getElementById('inClass').value;
+  const inSection = document.getElementById('inSection').value;
+  const inSubject = document.getElementById('inSubject').value;
+  const inExam = document.getElementById('inExam').value;
+  const inGroup = document.getElementById('inGroup').value;
+  const inMarks = document.getElementById('inMarks').value;
+
+  const key=`SchoolData_${inClass}_${inSection}_${inSubject}`;
+  let payload = {className:inClass,section:inSection,subject:inSubject,exam:inExam,group:inGroup,marks:inMarks,students:studentData};
+  await window.dbSave(`schoolData/${key}`, payload);
+  await renderStorageUI();
+}
+
+async function renderStorageUI(){
+  const c=document.getElementById('storageContainer');c.innerHTML='';
+  let allSchoolData = (await window.dbGet('schoolData')) || {};
+
+  ['৬ষ্ঠ','৭ম','৮ম','৯ম','১০ম'].forEach(cl=>{
+    const card=document.createElement('div');
+    card.className='storage-card';
+    card.innerHTML=`<h4>শ্রেণি: ${cl}</h4>`;
+    let found=false;
+
+    Object.keys(allSchoolData).forEach(k => {
+      if(k.startsWith(`SchoolData_${cl}_`)){
+        found=true;
+        const item = allSchoolData[k];
+        const d = document.createElement('div');
+        d.className='storage-item';
+        d.innerHTML=`<span><b>${item.section} শাখা</b> - ${item.subject}</span><div><button class="btn" style="padding:2px 6px;font-size:10px;" onclick="loadRecord('${k}')">লোড</button><button class="btn btn-danger" style="padding:2px 6px;font-size:10px;" onclick="deleteRecord('${k}')">মুছুন</button></div>`;
+        card.appendChild(d);
+      }
+    });
+
+    if(!found)card.innerHTML+='<div style="color:#888;font-style:italic;">কোনো ডাটা সেভ নেই</div>';
+    c.appendChild(card);
+  });
+}
+
+async function loadRecord(k){
+  const d = await window.dbGet(`schoolData/${k}`);
+  if(!d)return;
+  document.getElementById('inClass').value=d.className;
+  document.getElementById('inSection').value=d.section;
+  updateSubjectDropdown();
+  document.getElementById('inSubject').value=d.subject;
+  document.getElementById('inExam').value=d.exam;
+  document.getElementById('inGroup').value=d.group;
+  document.getElementById('inMarks').value=d.marks;
+  studentData=d.students||{};
+  
+  toggleGroupVisibility();updateHeader();await renderTables();
+  alert(`শ্রেণি ${d.className} (${d.subject}) এর ডাটা অনলাইন থেকে লোড হয়েছে!`);
+}
+
+async function deleteRecord(k){
+  if(confirm('আপনি কি নিশ্চিত যে ডাটা মুছে ফেলতে চান?')){
+    await window.dbRemove(`schoolData/${k}`);
+    await renderStorageUI();
+  }
+}
+
+function switchTemplate(mode){
+  currentMode=mode;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.template-view').forEach(v=>v.classList.remove('active'));
+  
+  const p=document.getElementById('mainPaper');
+  const h=document.getElementById('standardHeader');
+  const f=document.getElementById('footerSection');
+  const n=document.getElementById('numberSheetMeta');
+  const t=document.getElementById('tabulationMeta');
+  
+  const btn = document.getElementById('tabBtn_' + mode);
+  if(btn) btn.classList.add('active');
+
+  const config = {
+    'general': { view: 'generalView', paper: 'portrait', showHeader: true, showFooter: true, showMeta: true, showTabMeta: false },
+    'bangla-english': { view: 'banglaEnglishView', paper: 'portrait', showHeader: true, showFooter: true, showMeta: true, showTabMeta: false },
+    'tabulation-68': { view: 'tabulation68View', paper: 'landscape', showHeader: true, showFooter: false, showMeta: false, showTabMeta: true },
+    'tabulation-910': { view: 'tabulation910View', paper: 'landscape', showHeader: true, showFooter: false, showMeta: false, showTabMeta: true },
+    'admit-card': { view: 'admitCardView', paper: 'landscape', showHeader: false, showFooter: false, showMeta: false, showTabMeta: false },
+    'seat-card': { view: 'seatCardView', paper: 'landscape', showHeader: false, showFooter: false, showMeta: false, showTabMeta: false }
+  };
+
+  const currentCfg = config[mode] || config['general'];
+  
+  const targetView = document.getElementById(currentCfg.view);
+  if(targetView) targetView.classList.add('active');
+
+  if(p) p.className = 'paper ' + currentCfg.paper;
+  if(h) h.style.display = currentCfg.showHeader ? 'block' : 'none';
+  if(f) f.style.display = currentCfg.showFooter ? 'block' : 'none';
+  if(n) n.style.display = currentCfg.showMeta ? 'flex' : 'none';
+  if(t) t.style.display = currentCfg.showTabMeta ? 'flex' : 'none';
+
+  updateHeader();
+}
+
+function updateHeader(){
+  const inClass = document.getElementById('inClass').value;
+  const inGroup = document.getElementById('inGroup').value;
+  const inSection = document.getElementById('inSection').value;
+  const inSubject = document.getElementById('inSubject').value;
+  const inMarks = document.getElementById('inMarks').value;
+  const inExam = document.getElementById('inExam').value;
+
+  if(document.getElementById('outClass')) document.getElementById('outClass').innerText=inClass;
+  if(document.getElementById('outGroup')) document.getElementById('outGroup').innerText=inGroup;
+  if(document.getElementById('outSection')) document.getElementById('outSection').innerText=inSection;
+  if(document.getElementById('outSubject')) document.getElementById('outSubject').innerText=inSubject;
+  if(document.getElementById('outMarks')) document.getElementById('outMarks').innerText=inMarks;
+  if(document.getElementById('outExam')) document.getElementById('outExam').innerText=inExam;
+  if(document.getElementById('tabClass')) document.getElementById('tabClass').innerText=inClass;
+  if(document.getElementById('tabSection')) document.getElementById('tabSection').innerText=inSection;
+  
+  renderTables();
+}
+
+function printPage(){
+  let s=document.getElementById('dynamicPrintStyle');
+  if(!s){
+    s=document.createElement('style');
+    s.id='dynamicPrintStyle';
+    document.head.appendChild(s);
+  }
+  if(currentMode==='tabulation-68'||currentMode==='tabulation-910'||currentMode==='admit-card'||currentMode==='seat-card'){
+    s.innerHTML='@page{size:A4 landscape;margin:3mm}';
+  }else{
+    s.innerHTML='@page{size:A4 portrait;margin:3mm}';
+  }
+  window.print();
+}
+
+function exportToWordDoc(){
+  const inClass = document.getElementById('inClass').value;
+  const inSection = document.getElementById('inSection').value;
+  const inSubject = document.getElementById('inSubject').value;
+  const inExam = document.getElementById('inExam').value;
+
+  let content = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>Number Sheet</title>
+    <style>
+      body { font-family: 'Hind Siliguri', 'Arial', sans-serif; }
+      table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+      th, td { border: 1px solid #000; padding: 6px; text-align: center; font-size: 11pt; }
+      th { background-color: #f2f2f2; }
+      .header { text-align: center; margin-bottom: 15px; }
+      .header h2 { margin: 0; font-size: 16pt; }
+      .header p { margin: 2px; font-size: 11pt; }
+    </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>দলইনগর উচ্চ বিদ্যালয়</h2>
+        <p>${inExam}</p>
+        <p><b>শ্রেণি:</b> ${inClass} | <b> শাখা:</b> ${inSection} | <b>বিষয়:</b> ${inSubject}</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:10%;">রোল</th>
+            <th style="width:40%;">শিক্ষার্থীর নাম</th>
+            <th style="width:12%;">নৈর্ব্যক্তিক</th>
+            <th style="width:12%;">রচনামূলক</th>
+            <th style="width:12%;">ব্যবহারিক</th>
+            <th style="width:14%;">মোট</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+  let keys = Object.keys(studentData).sort((a,b)=>(parseInt(banglaToEnglishNum(a))||0)-(parseInt(banglaToEnglishNum(b))||0));
+  
+  if(keys.length === 0){
+    for(let i=1; i<=30; i++){
+      content += `
+        <tr>
+          <td>${i}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>`;
+    }
+  } else {
+    keys.forEach(r => {
+      let s = studentData[r];
+      content += `
+        <tr>
+          <td>${s.rollDisplay || r}</td>
+          <td style="text-align:left;">${s.name || ''}</td>
+          <td>${s.mcq || ''}</td>
+          <td>${s.cq || ''}</td>
+          <td>${s.prac || ''}</td>
+          <td>${s.total || ''}</td>
+        </tr>`;
+    });
+  }
+
+  content += `
+        </tbody>
+      </table>
+      <br><br><br>
+      <table style="border:none; width:100%;">
+        <tr style="border:none;">
+          <td style="border:none; text-align:center; width:33%;">বিষয় শিক্ষকের স্বাক্ষর</td>
+          <td style="border:none; text-align:center; width:33%;">শ্রেণি শিক্ষকের স্বাক্ষর</td>
+          <td style="border:none; text-align:center; width:33%;">
+            <img src="${headmasterSignUrl}" style="height:35px; vertical-align:middle; display:block; margin:0 auto 2px;" alt="Headmaster Sign"><br>
+            প্রধান শিক্ষকের স্বাক্ষর
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>`;
+
+  const blob = new Blob(['\ufeff' + content], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `নম্বর_ফর্দ_শ্রেণি_${inClass}_শাখা_${inSection}_${inSubject}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+window.addEventListener('firebase-ready', async () => {
+  await renderStorageUI();
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  buildAdminClassAssignUI();
+  updateSubjectDropdown();
+  toggleGroupVisibility();
+});
+</script>
+</body>
+</html>
